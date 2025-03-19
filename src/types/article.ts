@@ -20,6 +20,8 @@ export interface Article {
   isDraft: boolean;
   createdAt: string;
   updatedAt: string;
+  views?: number;
+  likes?: number;
 }
 
 export interface ArticleFormData {

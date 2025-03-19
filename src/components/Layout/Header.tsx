@@ -1,13 +1,24 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Search, UserCircle, Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Search, Menu, X, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
   
   // Track scroll position to change header style
   useEffect(() => {
@@ -23,6 +34,17 @@ const Header: React.FC = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  // Get user initials for avatar fallback
+  const getInitials = () => {
+    if (!user?.username) return 'U';
+    return user.username.charAt(0).toUpperCase();
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <header 
@@ -58,12 +80,51 @@ const Header: React.FC = () => {
         
         {/* User & Search Actions */}
         <div className="hidden md:flex items-center space-x-2">
-          <Link 
-            to="/login" 
-            className="p-2 rounded-md bg-karo-gold text-white flex items-center justify-center transition-all hover:bg-opacity-90"
-          >
-            <UserCircle size={24} />
-          </Link>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <Avatar className="h-10 w-10 cursor-pointer border-2 border-white hover:border-karo-gold transition-colors">
+                  {user.profileImage ? (
+                    <AvatarImage src={user.profileImage} alt={user.username} />
+                  ) : (
+                    <AvatarFallback className="bg-karo-gold text-white">
+                      {getInitials()}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-4 py-3 border-b">
+                  <p className="text-sm font-medium">{user.username}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                </div>
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="cursor-pointer">
+                    Profil Saya
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/drafts" className="cursor-pointer">
+                    Draft Saya
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={handleLogout}
+                  className="text-red-500 focus:text-red-500 cursor-pointer"
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link 
+              to="/login" 
+              className="p-2 rounded-md bg-karo-gold text-white flex items-center justify-center transition-all hover:bg-opacity-90"
+            >
+              <User size={24} />
+            </Link>
+          )}
           <button 
             className="p-2 rounded-md bg-white border border-karo-darkbeige text-karo-black flex items-center justify-center transition-all hover:bg-karo-cream"
           >
@@ -97,13 +158,29 @@ const Header: React.FC = () => {
               Alat Musik
             </Link>
             <div className="flex items-center space-x-2 pt-2">
-              <Link 
-                to="/login" 
-                className="flex-1 py-2 rounded-md bg-karo-gold text-white flex items-center justify-center gap-2"
-              >
-                <UserCircle size={20} />
-                <span>Login</span>
-              </Link>
+              {isAuthenticated ? (
+                <Link 
+                  to="/profile" 
+                  className="flex-1 py-2 rounded-md bg-karo-gold text-white flex items-center justify-center gap-2"
+                >
+                  {user.profileImage ? (
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={user.profileImage} alt={user.username} />
+                    </Avatar>
+                  ) : (
+                    <User size={20} />
+                  )}
+                  <span>Profil Saya</span>
+                </Link>
+              ) : (
+                <Link 
+                  to="/login" 
+                  className="flex-1 py-2 rounded-md bg-karo-gold text-white flex items-center justify-center gap-2"
+                >
+                  <User size={20} />
+                  <span>Login</span>
+                </Link>
+              )}
               <button 
                 className="flex-1 py-2 rounded-md bg-white border border-karo-darkbeige text-karo-black flex items-center justify-center gap-2"
               >
