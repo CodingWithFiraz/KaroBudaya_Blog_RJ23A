@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,12 +19,25 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				serif: ['Playfair Display', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				karo: {
+					gold: '#D4B06A',
+					cream: '#F7F2E4',
+					beige: '#F2EBD8',
+					darkbeige: '#E8DEC1',
+					brown: '#8B7355',
+					red: '#A83C3C',
+					black: '#1E1E1E',
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -84,11 +98,38 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'fade-up': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'slide-in': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(0)' }
+				},
+				'image-shimmer': {
+					'0%': { backgroundPosition: '-1000px 0' },
+					'100%': { backgroundPosition: '1000px 0' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.4s ease-out',
+				'fade-up': 'fade-up 0.6s ease-out',
+				'slide-in': 'slide-in 0.5s ease-out',
+				'image-shimmer': 'image-shimmer 2s infinite linear'
+			},
+			backdropFilter: {
+				'none': 'none',
+				'blur': 'blur(20px)',
+			},
+			transitionDuration: {
+				'2000': '2000ms',
 			}
 		}
 	},
