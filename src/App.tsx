@@ -13,6 +13,7 @@ import NotFound from '@/pages/NotFound';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'sonner';
 import KulinerPage from '@/pages/KulinerPage';
+import { AuthProvider } from '@/hooks/useAuth';
 
 function App() {
   const [isMounted, setIsMounted] = useState(false);
@@ -24,20 +25,22 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/editor/:id" element={<Editor />} />
-          <Route path="/drafts" element={<Drafts />} />
-          <Route path="/article/:id/:slug" element={<ArticleView />} />
-          <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/category/kuliner-karo" element={<KulinerPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Toaster />
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/editor" element={<Editor />} />
+            <Route path="/editor/:id" element={<Editor />} />
+            <Route path="/drafts" element={<Drafts />} />
+            <Route path="/article/:id/:slug" element={<ArticleView />} />
+            <Route path="/category/:category" element={<CategoryPage />} />
+            <Route path="/category/kuliner-karo" element={<KulinerPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+        </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
