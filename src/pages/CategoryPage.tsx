@@ -53,27 +53,27 @@ const CategoryPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
       <main className="flex-grow pt-20">
         <div className="container mx-auto px-4 py-12">
           {/* Location Header */}
           <div className="mb-2">
-            <p className="text-karo-brown">
+            <p className="text-karo-brown dark:text-gray-400">
               Karo, Sumatera Utara, Indonesia
             </p>
           </div>
           
           {/* Category Title - Updated to match design */}
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-12">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-12 dark:text-white">
             {getCategoryDisplayName()}
           </h1>
           
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-80 bg-gray-100 animate-pulse rounded-lg"></div>
+                <div key={i} className="h-80 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg"></div>
               ))}
             </div>
           ) : categoryArticles.length > 0 ? (
@@ -83,12 +83,12 @@ const CategoryPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-karo-cream rounded-xl">
-              <Feather size={48} className="text-karo-gold mx-auto mb-4" />
-              <h2 className="text-2xl font-serif font-bold mb-3">
+            <div className="text-center py-16 bg-karo-cream dark:bg-karo-darkcard rounded-xl">
+              <Feather size={48} className="text-karo-gold dark:text-karo-darkgold mx-auto mb-4" />
+              <h2 className="text-2xl font-serif font-bold mb-3 dark:text-white">
                 Maaf, artikel di kategori ini belum ada
               </h2>
-              <p className="text-karo-brown mb-6 max-w-md mx-auto">
+              <p className="text-karo-brown dark:text-gray-400 mb-6 max-w-md mx-auto">
                 Kami sedang berusaha untuk menambahkan konten baru. Silahkan kunjungi kategori lain.
               </p>
               <Link to="/" className="btn-primary">

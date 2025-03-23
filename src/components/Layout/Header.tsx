@@ -1,194 +1,175 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger,
-  DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Menu, X, User, Search, PenLine } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+import { useMobile } from '@/hooks/use-mobile';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isMobile } = useMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
   
-  // Track scroll position to change header style
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
   
-  // Close mobile menu when changing routes
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    // Close mobile menu when route changes
+    setMobileMenuOpen(false);
   }, [location.pathname]);
-
-  // Get user initials for avatar fallback
-  const getInitials = () => {
-    if (!user?.username) return 'U';
-    return user.username.charAt(0).toUpperCase();
+  
+  const navLinks = [
+    { name: 'Tempat', path: '/category/destinasi-tempat' },
+    { name: 'Kuliner', path: '/category/kuliner-karo' },
+    { name: 'Sejarah', path: '/category/budaya-tradisi-karo' },
+    { name: 'Alat Musik', path: '/category/musik-karo' },
+  ];
+  
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
   };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
-
+  
+  const handleProfileClick = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    } else {
+      navigate('/profile');
+    }
+  };
+  
   return (
     <header 
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 md:px-6',
-        isScrolled ? 'py-2 bg-white/90 backdrop-blur shadow-sm' : 'py-4 bg-transparent'
+        "fixed top-0 left-0 right-0 z-50 bg-white dark:bg-karo-darkbg transition-all duration-300",
+        isScrolled && "shadow-md bg-white/90 dark:bg-karo-darkbg/90 backdrop-blur-sm"
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <Link 
-          to="/" 
-          className="text-3xl font-serif font-bold text-karo-black transition-opacity hover:opacity-80"
-        >
-          LOGO
-        </Link>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/category/destinasi-tempat" className="nav-link">
-            Tempat
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link to="/" className="font-bold text-2xl">
+            <span className="text-karo-gold dark:text-karo-darkgold">KARO</span>
+            <span className="text-karo-black dark:text-white">BUDAYA</span>
           </Link>
-          <Link to="/category/kuliner-karo" className="nav-link">
-            Makanan
-          </Link>
-          <Link to="/category/budaya-tradisi-karo" className="nav-link">
-            Sejarah
-          </Link>
-          <Link to="/category/musik-karo" className="nav-link">
-            Alat Musik
-          </Link>
-        </nav>
-        
-        {/* User & Search Actions */}
-        <div className="hidden md:flex items-center space-x-2">
-          {isAuthenticated ? (
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex gap-8">
+            {navLinks.map(link => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={cn("nav-link", isActive(link.path) && "active")}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+          
+          {/* Right side actions */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            
+            <button
+              onClick={() => navigate('/editor')}
+              className="hidden md:flex items-center gap-1 text-sm py-1 px-3 rounded-full border border-karo-darkbeige dark:border-gray-700 hover:bg-karo-cream dark:hover:bg-gray-800 transition-colors"
+            >
+              <PenLine size={16} />
+              <span>Tulis</span>
+            </button>
+            
             <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none">
-                <Avatar className="h-10 w-10 cursor-pointer border-2 border-white hover:border-karo-gold transition-colors">
-                  {user.profileImage ? (
-                    <AvatarImage src={user.profileImage} alt={user.username} />
-                  ) : (
-                    <AvatarFallback className="bg-karo-gold text-white">
-                      {getInitials()}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
+              <DropdownMenuTrigger asChild>
+                <button className="w-10 h-10 rounded-full bg-karo-cream dark:bg-gray-700 flex items-center justify-center hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors">
+                  <User size={18} className="text-karo-brown dark:text-gray-300" />
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <div className="px-4 py-3 border-b">
-                  <p className="text-sm font-medium">{user.username}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                </div>
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="cursor-pointer">
-                    Profil Saya
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/drafts" className="cursor-pointer">
-                    Draft Saya
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={handleLogout}
-                  className="text-red-500 focus:text-red-500 cursor-pointer"
-                >
-                  Logout
-                </DropdownMenuItem>
+                {isAuthenticated ? (
+                  <>
+                    <DropdownMenuItem onClick={() => navigate('/profile')}>
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/drafts')}>
+                      Drafts
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      Logout
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem onClick={() => navigate('/login')}>
+                      Login
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/register')}>
+                      Register
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Link 
-              to="/login" 
-              className="p-2 rounded-md bg-karo-gold text-white flex items-center justify-center transition-all hover:bg-opacity-90"
+            
+            {/* Mobile menu button */}
+            <button 
+              className="block md:hidden"
+              onClick={toggleMobileMenu}
             >
-              <User size={24} />
-            </Link>
-          )}
-          <button 
-            className="p-2 rounded-md bg-white border border-karo-darkbeige text-karo-black flex items-center justify-center transition-all hover:bg-karo-cream"
-          >
-            <Search size={20} />
-          </button>
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
-        
-        {/* Mobile menu button */}
-        <button 
-          className="md:hidden p-2 text-karo-black"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
       
       {/* Mobile menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-karo-darkbeige shadow-lg animate-fade-in">
-          <nav className="flex flex-col p-4 space-y-4">
-            <Link to="/category/destinasi-tempat" className="nav-link py-2">
-              Tempat
-            </Link>
-            <Link to="/category/kuliner-karo" className="nav-link py-2">
-              Makanan
-            </Link>
-            <Link to="/category/budaya-tradisi-karo" className="nav-link py-2">
-              Sejarah
-            </Link>
-            <Link to="/category/musik-karo" className="nav-link py-2">
-              Alat Musik
-            </Link>
-            <div className="flex items-center space-x-2 pt-2">
-              {isAuthenticated ? (
-                <Link 
-                  to="/profile" 
-                  className="flex-1 py-2 rounded-md bg-karo-gold text-white flex items-center justify-center gap-2"
-                >
-                  {user.profileImage ? (
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={user.profileImage} alt={user.username} />
-                    </Avatar>
-                  ) : (
-                    <User size={20} />
-                  )}
-                  <span>Profil Saya</span>
-                </Link>
-              ) : (
-                <Link 
-                  to="/login" 
-                  className="flex-1 py-2 rounded-md bg-karo-gold text-white flex items-center justify-center gap-2"
-                >
-                  <User size={20} />
-                  <span>Login</span>
-                </Link>
-              )}
-              <button 
-                className="flex-1 py-2 rounded-md bg-white border border-karo-darkbeige text-karo-black flex items-center justify-center gap-2"
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white dark:bg-karo-darkbg border-t border-gray-100 dark:border-gray-800">
+          <div className="container mx-auto px-4 py-4 flex flex-col">
+            {navLinks.map(link => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={cn(
+                  "py-3 px-2",
+                  isActive(link.path) ? "text-karo-gold dark:text-karo-darkgold font-medium" : "text-karo-black dark:text-white"
+                )}
               >
-                <Search size={18} />
-                <span>Search</span>
-              </button>
-            </div>
-          </nav>
+                {link.name}
+              </Link>
+            ))}
+            <Link
+              to="/editor"
+              className="py-3 px-2 text-karo-black dark:text-white"
+            >
+              Tulis Artikel
+            </Link>
+          </div>
         </div>
       )}
     </header>

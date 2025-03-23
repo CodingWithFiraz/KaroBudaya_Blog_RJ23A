@@ -38,6 +38,36 @@
     --radius: 0.5rem;
   }
 
+  .dark {
+    --background: 240 10% 10%;
+    --foreground: 40 38% 97%;
+
+    --card: 240 10% 15%;
+    --card-foreground: 40 38% 97%;
+
+    --popover: 240 10% 15%;
+    --popover-foreground: 40 38% 97%;
+
+    --primary: 40 34% 63%;
+    --primary-foreground: 240 10% 10%;
+
+    --secondary: 240 10% 20%;
+    --secondary-foreground: 40 38% 97%;
+
+    --muted: 240 10% 20%;
+    --muted-foreground: 40 38% 70%;
+
+    --accent: 240 10% 20%;
+    --accent-foreground: 40 38% 97%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 38% 97%;
+
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 40 34% 63%;
+  }
+
   * {
     @apply border-border;
     -webkit-font-smoothing: antialiased;
@@ -64,11 +94,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-karo-gold/70 rounded-full transition-colors;
+    @apply bg-karo-gold/70 dark:bg-karo-darkgold/70 rounded-full transition-colors;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-karo-gold;
+    @apply bg-karo-gold dark:bg-karo-darkgold;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -78,35 +108,35 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-sm;
+    @apply bg-white/70 dark:bg-black/30 backdrop-blur-lg border border-white/20 dark:border-white/10 shadow-sm;
   }
   
   .editor-container {
-    @apply bg-karo-cream rounded-lg p-6 shadow-sm border border-karo-darkbeige;
+    @apply bg-karo-cream dark:bg-karo-darkbg rounded-lg p-6 shadow-sm border border-karo-darkbeige dark:border-gray-700;
   }
   
   .btn-primary {
-    @apply bg-karo-gold text-white px-6 py-2 rounded-md transition-all duration-300 hover:bg-opacity-90 focus:ring-2 focus:ring-karo-gold/50 shadow-sm hover:shadow;
+    @apply bg-karo-gold dark:bg-karo-darkgold text-white px-6 py-2 rounded-md transition-all duration-300 hover:bg-opacity-90 focus:ring-2 focus:ring-karo-gold/50 dark:focus:ring-karo-darkgold/50 shadow-sm hover:shadow;
   }
   
   .btn-secondary {
-    @apply bg-white text-karo-black border border-karo-darkbeige px-6 py-2 rounded-md transition-all duration-300 hover:bg-karo-cream focus:ring-2 focus:ring-karo-gold/30 shadow-sm hover:shadow;
+    @apply bg-white dark:bg-gray-800 text-karo-black dark:text-white border border-karo-darkbeige dark:border-gray-700 px-6 py-2 rounded-md transition-all duration-300 hover:bg-karo-cream dark:hover:bg-gray-700 focus:ring-2 focus:ring-karo-gold/30 dark:focus:ring-karo-darkgold/30 shadow-sm hover:shadow;
   }
   
   .input-field {
-    @apply w-full px-4 py-2 bg-white border border-karo-darkbeige rounded-md focus:outline-none focus:ring-2 focus:ring-karo-gold/50 transition-all duration-300;
+    @apply w-full px-4 py-2 bg-white dark:bg-gray-800 border border-karo-darkbeige dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-karo-gold/50 dark:focus:ring-karo-darkgold/50 dark:text-white transition-all duration-300;
   }
   
   .textarea-field {
-    @apply w-full px-4 py-3 bg-white border border-karo-darkbeige rounded-md focus:outline-none focus:ring-2 focus:ring-karo-gold/50 transition-all duration-300 min-h-[150px] resize-y;
+    @apply w-full px-4 py-3 bg-white dark:bg-gray-800 border border-karo-darkbeige dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-karo-gold/50 dark:focus:ring-karo-darkgold/50 dark:text-white transition-all duration-300 min-h-[150px] resize-y;
   }
   
   .nav-link {
-    @apply relative text-karo-black hover:text-karo-gold transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-karo-gold after:transition-all hover:after:w-full;
+    @apply relative text-karo-black dark:text-white hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-karo-gold dark:after:bg-karo-darkgold after:transition-all hover:after:w-full;
   }
   
   .nav-link.active {
-    @apply text-karo-gold after:w-full;
+    @apply text-karo-gold dark:text-karo-darkgold after:w-full;
   }
   
   .card-hover {

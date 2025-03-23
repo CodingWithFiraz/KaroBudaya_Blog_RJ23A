@@ -107,26 +107,26 @@ const ArticleView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
       <main className="flex-grow pt-24">
         {/* Location Header */}
         <div className="container mx-auto px-4 mb-2">
-          <p className="text-karo-brown">
+          <p className="text-karo-brown dark:text-gray-400">
             Karo, Sumatera Utara, Indonesia
           </p>
         </div>
         
         {/* Article Title */}
         <div className="container mx-auto px-4 mb-6">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold dark:text-white">
             {article.title}
           </h1>
           
           {/* Author Info */}
           <div className="flex items-center mt-4">
-            <div className="w-12 h-12 rounded-full bg-karo-cream overflow-hidden mr-3">
+            <div className="w-12 h-12 rounded-full bg-karo-cream dark:bg-gray-700 overflow-hidden mr-3">
               <img 
                 src="/placeholder.svg" 
                 alt={article.author}
@@ -134,8 +134,8 @@ const ArticleView: React.FC = () => {
               />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Added By</p>
-              <p className="font-medium">{article.author}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Added By</p>
+              <p className="font-medium dark:text-white">{article.author}</p>
             </div>
           </div>
         </div>
@@ -176,7 +176,7 @@ const ArticleView: React.FC = () => {
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={handleGoBack}
-              className="inline-flex items-center text-karo-brown hover:text-karo-gold transition-colors"
+              className="inline-flex items-center text-karo-brown dark:text-gray-300 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors"
             >
               <ArrowLeft size={18} className="mr-1" />
               Kembali
@@ -185,16 +185,16 @@ const ArticleView: React.FC = () => {
             <div className="flex space-x-2">
               {/* Text Size Controls - Updated to use T icons with different sizes */}
               <TooltipProvider>
-                <div className="flex items-center bg-white rounded-full shadow px-2 py-1 mr-4">
+                <div className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow px-2 py-1 mr-4">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className={`h-8 w-8 ${textSize === 'small' ? 'bg-karo-cream' : ''}`}
+                        className={`h-8 w-8 ${textSize === 'small' ? 'bg-karo-cream dark:bg-gray-700' : ''}`}
                         onClick={() => setTextSize('small')}
                       >
-                        <span className="font-serif font-bold text-xs">T</span>
+                        <span className="font-serif font-bold text-xs dark:text-white">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Kecil</TooltipContent>
@@ -205,10 +205,10 @@ const ArticleView: React.FC = () => {
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className={`h-8 w-8 ${textSize === 'medium' ? 'bg-karo-cream' : ''}`}
+                        className={`h-8 w-8 ${textSize === 'medium' ? 'bg-karo-cream dark:bg-gray-700' : ''}`}
                         onClick={() => setTextSize('medium')}
                       >
-                        <span className="font-serif font-bold text-base">T</span>
+                        <span className="font-serif font-bold text-base dark:text-white">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Sedang</TooltipContent>
@@ -219,10 +219,10 @@ const ArticleView: React.FC = () => {
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className={`h-8 w-8 ${textSize === 'large' ? 'bg-karo-cream' : ''}`}
+                        className={`h-8 w-8 ${textSize === 'large' ? 'bg-karo-cream dark:bg-gray-700' : ''}`}
                         onClick={() => setTextSize('large')}
                       >
-                        <span className="font-serif font-bold text-lg">T</span>
+                        <span className="font-serif font-bold text-lg dark:text-white">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Besar</TooltipContent>
@@ -232,14 +232,14 @@ const ArticleView: React.FC = () => {
               
               <Link 
                 to={`/editor/${article.id}`}
-                className="p-2 rounded-full bg-karo-cream text-karo-brown hover:bg-karo-darkbeige transition-colors"
+                className="p-2 rounded-full bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors"
               >
                 <Edit size={18} />
               </Link>
               
               <button 
                 onClick={handleDelete}
-                className="p-2 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                className="p-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
               >
                 <Trash2 size={18} />
               </button>
@@ -251,13 +251,13 @@ const ArticleView: React.FC = () => {
               <div className="flex items-center mb-4">
                 <Link 
                   to={`/category/${article.category.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="inline-block px-3 py-1 bg-karo-cream text-karo-brown text-sm font-medium rounded-full hover:bg-karo-darkbeige transition-colors"
+                  className="inline-block px-3 py-1 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 text-sm font-medium rounded-full hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors"
                 >
                   {article.category}
                 </Link>
               </div>
               
-              <div className="flex flex-wrap items-center gap-4 text-karo-brown mb-8 text-sm">
+              <div className="flex flex-wrap items-center gap-4 text-karo-brown dark:text-gray-400 mb-8 text-sm">
                 <div className="flex items-center">
                   <User size={16} className="mr-1" />
                   <span>{article.author}</span>
@@ -274,38 +274,27 @@ const ArticleView: React.FC = () => {
                 </div>
               </div>
               
-              <h2 className="text-2xl font-serif font-bold mb-4">
+              <h2 className="text-2xl font-serif font-bold mb-4 dark:text-white">
                 Uraian
               </h2>
               
-              <div className={`prose prose-lg max-w-none ${getTextSizeClass()}`}>
+              <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
                 {article.content.split('\n').map((paragraph, index) => (
                   paragraph ? 
                     <div 
                       key={index} 
-                      className="mb-4 text-karo-black"
+                      className="mb-4 text-karo-black dark:text-gray-100"
                       dangerouslySetInnerHTML={{ __html: processContent(paragraph) }}
                     /> : 
                     <br key={index} />
                 ))}
-                
-                {/* Example inline image - This would typically come from the article content */}
-                {article.inlineImages && article.inlineImages.length > 0 && (
-                  <div className="my-6">
-                    <img 
-                      src={article.inlineImages[0].url} 
-                      alt="Article image"
-                      className="w-full h-auto rounded-lg"
-                    />
-                  </div>
-                )}
               </div>
             </div>
             
             {/* Map and Location Info */}
             <div className="md:col-span-1">
               {article.mapLocation ? (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
                   <div className="h-48 bg-gray-200 relative">
                     <iframe 
                       src={`https://maps.google.com/maps?q=${article.mapLocation.latitude},${article.mapLocation.longitude}&z=15&output=embed`}
@@ -320,10 +309,10 @@ const ArticleView: React.FC = () => {
                   
                   <div className="p-4">
                     <div className="flex items-start mb-2">
-                      <MapPin size={20} className="text-karo-gold mt-1 mr-2 flex-shrink-0" />
+                      <MapPin size={20} className="text-karo-gold dark:text-karo-darkgold mt-1 mr-2 flex-shrink-0" />
                       <div>
-                        <h3 className="font-bold text-lg">{article.mapLocation.name}</h3>
-                        <p className="text-sm text-gray-600">
+                        <h3 className="font-bold text-lg dark:text-white">{article.mapLocation.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {article.mapLocation.address || 'Kabupaten Karo, Provinsi Sumatera Utara, Indonesia'}
                         </p>
                       </div>
@@ -333,15 +322,15 @@ const ArticleView: React.FC = () => {
                       href={getGoogleMapsUrl(article.mapLocation)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full block text-center py-2 mt-2 bg-karo-gold text-white rounded-md hover:bg-opacity-90 transition-colors"
+                      className="w-full block text-center py-2 mt-2 bg-karo-gold dark:bg-karo-darkgold text-white rounded-md hover:bg-opacity-90 transition-colors"
                     >
                       Dapatkan petunjuk arah
                     </a>
                   </div>
                 </div>
               ) : (
-                <div className="bg-gray-100 rounded-lg p-4 text-center">
-                  <p className="text-gray-500">Lokasi tidak tersedia</p>
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">Lokasi tidak tersedia</p>
                 </div>
               )}
             </div>

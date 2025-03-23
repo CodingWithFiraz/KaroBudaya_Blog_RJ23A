@@ -43,13 +43,13 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
         <div className="absolute bottom-0 left-0 right-0 p-6 z-20 flex flex-col items-start">
           <Link 
             to={`/category/${article.category.toLowerCase().replace(/\s+/g, '-')}`}
-            className="inline-block px-3 py-1 bg-karo-gold text-white text-sm font-medium rounded-full mb-3 hover:bg-opacity-90 transition-colors"
+            className="inline-block px-3 py-1 bg-karo-gold dark:bg-karo-darkgold text-white text-sm font-medium rounded-full mb-3 hover:bg-opacity-90 transition-colors"
           >
             {article.category}
           </Link>
           
           <Link to={`/article/${article.id}/${slug}`}>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4 hover:text-karo-gold transition-colors">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors">
               {article.title}
             </h2>
           </Link>
@@ -71,7 +71,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
 
   if (variant === 'list') {
     return (
-      <div className="flex flex-col md:flex-row gap-5 card-hover p-4">
+      <div className="flex flex-col md:flex-row gap-5 card-hover p-4 dark:bg-karo-darkcard dark:border-gray-700 rounded-lg">
         <Link 
           to={`/article/${article.id}/${slug}`}
           className="md:w-1/3 h-48 overflow-hidden rounded-lg"
@@ -86,22 +86,22 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
         <div className="md:w-2/3 flex flex-col">
           <Link 
             to={`/category/${article.category.toLowerCase().replace(/\s+/g, '-')}`}
-            className="inline-block px-3 py-1 bg-karo-cream text-karo-brown text-xs font-medium rounded-full mb-2 self-start hover:bg-karo-darkbeige transition-colors"
+            className="inline-block px-3 py-1 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 text-xs font-medium rounded-full mb-2 self-start hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors"
           >
             {article.category}
           </Link>
           
           <Link to={`/article/${article.id}/${slug}`}>
-            <h3 className="text-xl font-serif font-semibold mb-2 hover:text-karo-gold transition-colors">
+            <h3 className="text-xl font-serif font-semibold mb-2 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors dark:text-white">
               {article.title}
             </h3>
           </Link>
           
-          <p className="text-karo-brown mb-3 line-clamp-2">
+          <p className="text-karo-brown dark:text-gray-300 mb-3 line-clamp-2">
             {article.content.substring(0, 150)}...
           </p>
           
-          <div className="mt-auto flex items-center space-x-4 text-karo-brown/80 text-xs">
+          <div className="mt-auto flex items-center space-x-4 text-karo-brown/80 dark:text-gray-400 text-xs">
             <div className="flex items-center">
               <User size={12} className="mr-1" />
               <span>{article.author}</span>
@@ -116,11 +116,11 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
     );
   }
 
-  // Default card view - Updated to match design
+  // Default card view
   return (
     <div 
       className={cn(
-        "flex flex-col overflow-hidden rounded-lg card-hover",
+        "flex flex-col overflow-hidden rounded-lg card-hover dark:border-gray-700",
         article.isDraft && "opacity-70"
       )}
     >
@@ -135,27 +135,27 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
         />
       </Link>
       
-      <div className="p-4 bg-white flex-grow flex flex-col">
+      <div className="p-4 bg-white dark:bg-karo-darkcard flex-grow flex flex-col">
         <div className="flex-grow">
           <Link 
             to={`/category/${article.category.toLowerCase().replace(/\s+/g, '-')}`}
-            className="inline-block px-3 py-1 bg-karo-cream text-karo-brown text-xs font-medium rounded-full mb-2 hover:bg-karo-darkbeige transition-colors"
+            className="inline-block px-3 py-1 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 text-xs font-medium rounded-full mb-2 hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors"
           >
             {article.category}
           </Link>
           
           <Link to={`/article/${article.id}/${slug}`}>
-            <h3 className="text-lg font-serif font-semibold mb-2 line-clamp-2 hover:text-karo-gold transition-colors">
+            <h3 className="text-lg font-serif font-semibold mb-2 line-clamp-2 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors dark:text-white">
               {article.title}
             </h3>
           </Link>
           
-          <p className="text-karo-brown text-sm mb-3 line-clamp-3">
+          <p className="text-karo-brown dark:text-gray-300 text-sm mb-3 line-clamp-3">
             {article.content.substring(0, 120)}...
           </p>
         </div>
         
-        <div className="flex items-center justify-between text-karo-brown/80 text-xs">
+        <div className="flex items-center justify-between text-karo-brown/80 dark:text-gray-400 text-xs">
           <div className="flex items-center">
             <User size={12} className="mr-1" />
             <span>{article.author}</span>

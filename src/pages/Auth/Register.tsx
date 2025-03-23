@@ -6,7 +6,6 @@ import { AuthFormData } from '@/types/user';
 import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import Header from '@/components/Layout/Header';
-import Footer from '@/components/Layout/Footer';
 import { Lock, Mail, User } from 'lucide-react';
 
 const Register: React.FC = () => {
@@ -34,16 +33,16 @@ const Register: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
-      <main className="flex-grow pt-24 flex items-center justify-center">
-        <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-serif font-bold mb-6 text-center">Daftar Akun</h1>
+      <main className="flex-grow flex items-center justify-center py-16">
+        <div className="w-full max-w-md p-8 bg-white dark:bg-karo-darkcard shadow-lg rounded-lg">
+          <h1 className="text-2xl font-serif font-bold mb-6 text-center dark:text-white">Daftar Akun</h1>
           
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-sm font-medium">
+              <label htmlFor="username" className="block text-sm font-medium dark:text-gray-200">
                 Username
               </label>
               <div className="relative">
@@ -54,7 +53,7 @@ const Register: React.FC = () => {
                   id="username"
                   type="text"
                   placeholder="Masukkan username"
-                  className="pl-10"
+                  className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                   {...registerField('username', { 
                     required: 'Username wajib diisi',
                     minLength: {
@@ -65,12 +64,12 @@ const Register: React.FC = () => {
                 />
               </div>
               {errors.username && (
-                <p className="text-sm text-red-500">{errors.username.message}</p>
+                <p className="text-sm text-red-500 dark:text-red-400">{errors.username.message}</p>
               )}
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium">
+              <label htmlFor="email" className="block text-sm font-medium dark:text-gray-200">
                 Email
               </label>
               <div className="relative">
@@ -81,7 +80,7 @@ const Register: React.FC = () => {
                   id="email"
                   type="email"
                   placeholder="Masukkan email"
-                  className="pl-10"
+                  className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                   {...registerField('email', { 
                     required: 'Email wajib diisi',
                     pattern: {
@@ -92,12 +91,12 @@ const Register: React.FC = () => {
                 />
               </div>
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-sm text-red-500 dark:text-red-400">{errors.email.message}</p>
               )}
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium">
+              <label htmlFor="password" className="block text-sm font-medium dark:text-gray-200">
                 Password
               </label>
               <div className="relative">
@@ -108,7 +107,7 @@ const Register: React.FC = () => {
                   id="password"
                   type="password"
                   placeholder="Masukkan password"
-                  className="pl-10"
+                  className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                   {...registerField('password', { 
                     required: 'Password wajib diisi',
                     minLength: {
@@ -119,12 +118,12 @@ const Register: React.FC = () => {
                 />
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password.message}</p>
+                <p className="text-sm text-red-500 dark:text-red-400">{errors.password.message}</p>
               )}
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium dark:text-gray-200">
                 Konfirmasi Password
               </label>
               <div className="relative">
@@ -135,7 +134,7 @@ const Register: React.FC = () => {
                   id="confirmPassword"
                   type="password"
                   placeholder="Konfirmasi password"
-                  className="pl-10"
+                  className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
                   {...registerField('confirmPassword', { 
                     required: 'Konfirmasi password wajib diisi',
                     validate: value => value === password || 'Password tidak cocok'
@@ -143,31 +142,29 @@ const Register: React.FC = () => {
                 />
               </div>
               {errors.confirmPassword && (
-                <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
+                <p className="text-sm text-red-500 dark:text-red-400">{errors.confirmPassword.message}</p>
               )}
             </div>
             
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-karo-gold text-white py-2 rounded-md hover:bg-opacity-90 transition-colors"
+              className="w-full bg-karo-gold dark:bg-karo-darkgold text-white py-2 rounded-md hover:bg-opacity-90 transition-colors"
             >
               {isLoading ? 'Loading...' : 'Daftar'}
             </button>
           </form>
           
-          <div className="mt-6 text-center text-sm">
+          <div className="mt-6 text-center text-sm dark:text-gray-300">
             <p>
               Sudah punya akun?{' '}
-              <Link to="/login" className="text-karo-gold hover:underline">
+              <Link to="/login" className="text-karo-gold dark:text-karo-darkgold hover:underline">
                 Login sekarang
               </Link>
             </p>
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };

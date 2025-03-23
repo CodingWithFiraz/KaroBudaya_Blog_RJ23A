@@ -37,6 +37,11 @@ export default {
 					brown: '#8B7355',
 					red: '#A83C3C',
 					black: '#1E1E1E',
+					// Dark mode variants
+					darkgold: '#B89555',
+					darkbg: '#1A1F2C',
+					darkcard: '#222222',
+					darksecondary: '#333333',
 				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
