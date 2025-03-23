@@ -3,10 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FeaturedImage from './FeaturedImage';
 import CategoryDropdown from './CategoryDropdown';
-import { Article, ArticleFormData, Category } from '@/types/article';
+import { Article, ArticleFormData, Category, MapLocation } from '@/types/article';
 import { CATEGORIES } from '@/utils/articleUtils';
 import { useArticles } from '@/hooks/useArticles';
 import { toast } from 'sonner';
+import { MapPin, Upload, X, Image as ImageIcon } from 'lucide-react';
+import MapLocationPicker from './MapLocationPicker';
+import CarouselImageUploader from './CarouselImageUploader';
+import InlineImageUploader from './InlineImageUploader';
 
 interface ArticleEditorProps {
   article?: Article;
@@ -24,9 +28,15 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     category: CATEGORIES[0],
     featuredImage: null,
     featuredImageUrl: '',
+    carouselImages: [],
+    carouselImageUrls: [],
+    inlineImages: [],
+    inlineImageUrls: [],
+    mapLocation: undefined,
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showMapPicker, setShowMapPicker] = useState(false);
 
   // Initialize form with article data if editing
   useEffect(() => {
@@ -38,6 +48,9 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         email: article.email,
         category: article.category,
         featuredImageUrl: article.featuredImage,
+        carouselImageUrls: article.carouselImages || [],
+        inlineImageUrls: article.inlineImages ? article.inlineImages.map(img => img.url) : [],
+        mapLocation: article.mapLocation,
       });
     }
   }, [article]);
@@ -57,8 +70,52 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     setFormData(prev => ({ 
       ...prev, 
       featuredImage: file,
-      // Clear the imageUrl if we're uploading a new file
       featuredImageUrl: file ? '' : prev.featuredImageUrl
+    }));
+  };
+
+  const handleCarouselImagesChange = (files: File[]) => {
+    setFormData(prev => ({
+      ...prev,
+      carouselImages: [...(prev.carouselImages || []), ...files]
+    }));
+  };
+
+  const removeCarouselImage = (index: number) => {
+    setFormData(prev => {
+      const newCarouselImages = [...(prev.carouselImages || [])];
+      newCarouselImages.splice(index, 1);
+      
+      const newCarouselImageUrls = [...(prev.carouselImageUrls || [])];
+      newCarouselImageUrls.splice(index, 1);
+      
+      return {
+        ...prev,
+        carouselImages: newCarouselImages,
+        carouselImageUrls: newCarouselImageUrls
+      };
+    });
+  };
+
+  const handleInlineImageChange = (files: File[]) => {
+    setFormData(prev => ({
+      ...prev,
+      inlineImages: [...(prev.inlineImages || []), ...files]
+    }));
+  };
+
+  const handleMapLocationChange = (location: MapLocation) => {
+    setFormData(prev => ({
+      ...prev,
+      mapLocation: location
+    }));
+    setShowMapPicker(false);
+  };
+
+  const removeMapLocation = () => {
+    setFormData(prev => ({
+      ...prev,
+      mapLocation: undefined
     }));
   };
 
@@ -159,6 +216,27 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
               rows={10}
             />
           </div>
+          
+          <div className="mb-4">
+            <label className="block text-karo-black font-medium mb-1">
+              GAMBAR UNTUK CAROUSEL
+            </label>
+            <CarouselImageUploader
+              existingImages={formData.carouselImageUrls || []}
+              onImagesChange={handleCarouselImagesChange}
+              onImageRemove={removeCarouselImage}
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-karo-black font-medium mb-1">
+              GAMBAR UNTUK KONTEN ARTIKEL
+            </label>
+            <InlineImageUploader
+              existingImages={formData.inlineImageUrls || []}
+              onImagesChange={handleInlineImageChange}
+            />
+          </div>
         </div>
         
         <div className="col-span-1">
@@ -205,6 +283,50 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
               value={formData.category} 
               onChange={handleCategoryChange} 
             />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-karo-black font-medium mb-1">
+              LOKASI
+            </label>
+            {formData.mapLocation ? (
+              <div className="border rounded-lg p-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-medium">{formData.mapLocation.name}</h3>
+                    <p className="text-sm text-gray-500">
+                      {formData.mapLocation.latitude.toFixed(6)}, {formData.mapLocation.longitude.toFixed(6)}
+                    </p>
+                    {formData.mapLocation.address && (
+                      <p className="text-sm mt-1">{formData.mapLocation.address}</p>
+                    )}
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={removeMapLocation}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowMapPicker(true)}
+                className="w-full flex items-center justify-center gap-2 p-3 border border-dashed rounded-lg text-karo-brown hover:bg-karo-cream/20 transition-colors"
+              >
+                <MapPin size={18} />
+                Tambahkan Lokasi
+              </button>
+            )}
+            
+            {showMapPicker && (
+              <MapLocationPicker
+                onLocationChange={handleMapLocationChange}
+                onCancel={() => setShowMapPicker(false)}
+              />
+            )}
           </div>
           
           <div className="flex flex-col md:flex-row justify-end gap-3 mt-6">

@@ -15,6 +15,7 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Profile from "./pages/Auth/Profile";
 
+// Create a client
 const queryClient = new QueryClient();
 
 const App = () => (
