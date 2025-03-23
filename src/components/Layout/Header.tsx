@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, User, Search, PenLine } from 'lucide-react';
@@ -35,7 +34,6 @@ const Header: React.FC = () => {
   }, []);
   
   useEffect(() => {
-    // Close mobile menu when route changes
     setMobileMenuOpen(false);
   }, [location.pathname]);
   
@@ -63,6 +61,8 @@ const Header: React.FC = () => {
     }
   };
   
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  
   return (
     <header 
       className={cn(
@@ -72,13 +72,11 @@ const Header: React.FC = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
           <Link to="/" className="font-bold text-2xl">
             <span className="text-karo-gold dark:text-karo-darkgold">KARO</span>
             <span className="text-karo-black dark:text-white">BUDAYA</span>
           </Link>
           
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-8">
             {navLinks.map(link => (
               <Link
@@ -91,7 +89,6 @@ const Header: React.FC = () => {
             ))}
           </nav>
           
-          {/* Right side actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
             
@@ -136,7 +133,6 @@ const Header: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* Mobile menu button */}
             <button 
               className="block md:hidden"
               onClick={toggleMobileMenu}
@@ -147,7 +143,6 @@ const Header: React.FC = () => {
         </div>
       </div>
       
-      {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white dark:bg-karo-darkbg border-t border-gray-100 dark:border-gray-800">
           <div className="container mx-auto px-4 py-4 flex flex-col">
