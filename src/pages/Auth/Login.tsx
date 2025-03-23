@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AuthLayout from '@/components/Layout/AuthLayout';
+import { Mail, Lock } from 'lucide-react';
+
+type AuthFormData = {
+  email: string;
+  password: string;
+  username?: string;
+  confirmPassword?: string;
+};
 
 const Login: React.FC = () => {
   const { login, isLoading } = useAuth();
@@ -79,13 +89,13 @@ const Login: React.FC = () => {
             )}
           </div>
           
-          <button
+          <Button
             type="submit"
             disabled={isLoading}
             className="w-full bg-karo-gold dark:bg-karo-darkgold text-white py-2 rounded-md hover:bg-opacity-90 transition-colors"
           >
             {isLoading ? 'Loading...' : 'Login'}
-          </button>
+          </Button>
         </form>
         
         <div className="mt-6 text-center text-sm dark:text-gray-300">

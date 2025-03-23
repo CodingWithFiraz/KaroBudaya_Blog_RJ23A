@@ -5,12 +5,8 @@ import { useTheme } from './ThemeProvider';
 import { Button } from './ui/button';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
-
   return (
     <Button 
       variant="ghost" 
@@ -19,9 +15,9 @@ export function ThemeToggle() {
       className="rounded-full"
     >
       {theme === 'dark' ? (
-        <Moon className="h-5 w-5" />
+        <Sun className="h-5 w-5" />
       ) : (
-        <Sun className="h-5 w-5" /> 
+        <Moon className="h-5 w-5" /> 
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>

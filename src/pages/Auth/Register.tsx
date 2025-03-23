@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,12 +9,19 @@ import { toast } from 'sonner';
 import AuthLayout from '@/components/Layout/AuthLayout';
 import { Lock, Mail, User } from 'lucide-react';
 
+type AuthFormData = {
+  email: string;
+  password: string;
+  username?: string;
+  confirmPassword?: string;
+};
+
 const Register: React.FC = () => {
-  const { register, isLoading } = useAuth();
+  const { register: registerUser, isLoading } = useAuth();
   const navigate = useNavigate();
   
   const { 
-    register: registerField, 
+    register, 
     handleSubmit, 
     formState: { errors },
     watch
@@ -25,7 +34,7 @@ const Register: React.FC = () => {
       return;
     }
     
-    const success = await register(data);
+    const success = await registerUser(data);
     if (success) {
       navigate('/');
     } else {
@@ -52,7 +61,7 @@ const Register: React.FC = () => {
                 type="text"
                 placeholder="Masukkan username"
                 className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                {...registerField('username', { 
+                {...register('username', { 
                   required: 'Username wajib diisi',
                   minLength: {
                     value: 3,
@@ -79,7 +88,7 @@ const Register: React.FC = () => {
                 type="email"
                 placeholder="Masukkan email"
                 className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                {...registerField('email', { 
+                {...register('email', { 
                   required: 'Email wajib diisi',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -106,7 +115,7 @@ const Register: React.FC = () => {
                 type="password"
                 placeholder="Masukkan password"
                 className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                {...registerField('password', { 
+                {...register('password', { 
                   required: 'Password wajib diisi',
                   minLength: {
                     value: 6,
@@ -133,7 +142,7 @@ const Register: React.FC = () => {
                 type="password"
                 placeholder="Konfirmasi password"
                 className="pl-10 dark:bg-gray-800 dark:text-white dark:border-gray-700"
-                {...registerField('confirmPassword', { 
+                {...register('confirmPassword', { 
                   required: 'Konfirmasi password wajib diisi',
                   validate: value => value === password || 'Password tidak cocok'
                 })}
