@@ -58,8 +58,16 @@ const CategoryPage: React.FC = () => {
       
       <main className="flex-grow pt-20">
         <div className="container mx-auto px-4 py-12">
-          <h1 className="text-3xl font-serif font-bold mb-8">
-            Kategori: {getCategoryDisplayName()}
+          {/* Location Header */}
+          <div className="mb-2">
+            <p className="text-karo-brown">
+              Karo, Sumatera Utara, Indonesia
+            </p>
+          </div>
+          
+          {/* Category Title - Updated to match design */}
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-12">
+            {getCategoryDisplayName()}
           </h1>
           
           {isLoading ? (

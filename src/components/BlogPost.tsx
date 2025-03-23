@@ -116,7 +116,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
     );
   }
 
-  // Default card view
+  // Default card view - Updated to match design
   return (
     <div 
       className={cn(

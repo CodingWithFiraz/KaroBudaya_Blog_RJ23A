@@ -12,10 +12,7 @@ import {
   Trash2, 
   ArrowLeft, 
   MapPin, 
-  ExternalLink,
-  Type,
-  Text,
-  TextSelect
+  ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -186,7 +183,7 @@ const ArticleView: React.FC = () => {
             </button>
             
             <div className="flex space-x-2">
-              {/* Text Size Controls */}
+              {/* Text Size Controls - Updated to use T icons with different sizes */}
               <TooltipProvider>
                 <div className="flex items-center bg-white rounded-full shadow px-2 py-1 mr-4">
                   <Tooltip>
@@ -197,7 +194,7 @@ const ArticleView: React.FC = () => {
                         className={`h-8 w-8 ${textSize === 'small' ? 'bg-karo-cream' : ''}`}
                         onClick={() => setTextSize('small')}
                       >
-                        <TextSelect size={16} />
+                        <span className="font-serif font-bold text-xs">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Kecil</TooltipContent>
@@ -211,7 +208,7 @@ const ArticleView: React.FC = () => {
                         className={`h-8 w-8 ${textSize === 'medium' ? 'bg-karo-cream' : ''}`}
                         onClick={() => setTextSize('medium')}
                       >
-                        <Text size={16} />
+                        <span className="font-serif font-bold text-base">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Sedang</TooltipContent>
@@ -225,7 +222,7 @@ const ArticleView: React.FC = () => {
                         className={`h-8 w-8 ${textSize === 'large' ? 'bg-karo-cream' : ''}`}
                         onClick={() => setTextSize('large')}
                       >
-                        <Type size={16} />
+                        <span className="font-serif font-bold text-lg">T</span>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Ukuran Besar</TooltipContent>
