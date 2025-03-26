@@ -57,7 +57,7 @@ const Index: React.FC = () => {
         {/* Destinations Sidebar + Featured Article Section */}
         <section className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Destinations sidebar */}
-          <div className="lg:col-span-3 rounded-xl p-6 bg-gray-600">
+          <div className="lg:col-span-3 rounded-xl p-6 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 ">
             <h2 className="text-xl font-serif font-bold mb-4">
               Temukan Destinasi Tempat Impianmu
             </h2>
@@ -133,7 +133,7 @@ const Index: React.FC = () => {
         </section>
         
         {/* Heritage/Popular Section */}
-        <section className="py-12 bg-gray-600">
+        <section className="py-12 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 ">
           <div className="container mx-auto px-4">
             <div className="flex items-baseline justify-between mb-8">
               <h2 className="text-2xl font-serif font-bold text-inherit">Warisan Budaya</h2>
@@ -203,7 +203,7 @@ const Index: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {categoryGroups.map(category => <Card key={category.slug} className="overflow-hidden border-none shadow-md">
-                <div className="p-4 bg-gray-600">
+                <div className="p-4 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 ">
                   <h3 className="text-xl font-serif font-bold text-inherit">
                     {category.title}
                   </h3>
