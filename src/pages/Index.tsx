@@ -57,7 +57,7 @@ const Index: React.FC = () => {
         {/* Destinations Sidebar + Featured Article Section */}
         <section className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Destinations sidebar */}
-          <div className="lg:col-span-3 bg-karo-cream rounded-xl p-6">
+          <div className="lg:col-span-3 rounded-xl p-6 bg-gray-600">
             <h2 className="text-xl font-serif font-bold mb-4">
               Temukan Destinasi Tempat Impianmu
             </h2>
@@ -133,10 +133,10 @@ const Index: React.FC = () => {
         </section>
         
         {/* Heritage/Popular Section */}
-        <section className="bg-karo-cream py-12">
+        <section className="py-12 bg-gray-600">
           <div className="container mx-auto px-4">
             <div className="flex items-baseline justify-between mb-8">
-              <h2 className="text-2xl font-serif font-bold text-zinc-950">Warisan Budaya</h2>
+              <h2 className="text-2xl font-serif font-bold text-inherit">Warisan Budaya</h2>
               <Link to="/" className="text-karo-gold flex items-center hover:underline text-sm">
                 Lihat Koleksi Lainnya
                 <ArrowRight size={16} className="ml-1" />
@@ -146,7 +146,7 @@ const Index: React.FC = () => {
             {heritageArticles.length > 0 ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Main heritage article */}
                 <div>
-                  <h3 className="text-3xl font-serif font-bold mb-4 text-zinc-950">
+                  <h3 className="text-3xl font-serif font-bold mb-4 text-inherit">
                     Jelajahi Keindahan Uis Karo
                   </h3>
                   
@@ -175,11 +175,11 @@ const Index: React.FC = () => {
                 {/* Heritage article info */}
                 <div className="flex flex-col justify-center">
                   <div className="mb-4">
-                    <span className="text-karo-brown text-sm">Warisan Budaya</span>
-                    <h3 className="text-2xl font-serif font-bold mt-1 text-zinc-950">Uis Nipes</h3>
+                    <span className="text-inherit text-sm">Warisan Budaya</span>
+                    <h3 className="text-2xl font-serif font-bold mt-1 text-inherit">Uis Nipes</h3>
                   </div>
                   
-                  <p className="text-karo-brown mb-6 leading-relaxed">
+                  <p className="text-inherit mb-6 leading-relaxed">
                     Uis Nipes sering digunakan dalam acara adat seperti pernikahan, upacara keagamaan, dan penyambutan tamu kehormatan.
                   </p>
                   
@@ -187,7 +187,7 @@ const Index: React.FC = () => {
                     <img src="/placeholder.svg" alt="Author" className="w-10 h-10 rounded-full object-cover border-2 border-white" />
                     <div>
                       <p className="text-sm font-medium text-zinc-950">Penulis</p>
-                      <p className="text-xs text-karo-brown">Denis Ema</p>
+                      <p className="text-xs text-inherit">Denis Ema</p>
                     </div>
                   </div>
                 </div>
@@ -203,8 +203,8 @@ const Index: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {categoryGroups.map(category => <Card key={category.slug} className="overflow-hidden border-none shadow-md">
-                <div className="bg-karo-cream p-4">
-                  <h3 className="text-xl font-serif font-bold text-zinc-950">
+                <div className="p-4 bg-gray-600">
+                  <h3 className="text-xl font-serif font-bold text-inherit">
                     {category.title}
                   </h3>
                 </div>
