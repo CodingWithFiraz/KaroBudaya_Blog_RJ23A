@@ -146,7 +146,7 @@ const Index: React.FC = () => {
             {heritageArticles.length > 0 ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Main heritage article */}
                 <div>
-                  <h3 className="text-3xl font-serif font-bold mb-4 text-zinc-950">
+                  <h3 className="text-3xl font-serif font-bold mb-4 text-inherit">
                     Jelajahi Keindahan Uis Karo
                   </h3>
                   
@@ -154,7 +154,7 @@ const Index: React.FC = () => {
                     <img src="/lovable-uploads/5e2f1dda-2d6c-44e5-9a3a-87b1ba1c8088.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
-                      <div className="inline-block px-2 py-1 bg-white text-sm font-medium rounded-sm mb-2">
+                      <div className="inline-block px-2 py-1 bg-inheri text-sm font-medium rounded-sm mb-2 text-inherit">
                         Keunikan Budaya
                       </div>
                       
@@ -175,19 +175,19 @@ const Index: React.FC = () => {
                 {/* Heritage article info */}
                 <div className="flex flex-col justify-center">
                   <div className="mb-4">
-                    <span className="text-karo-brown text-sm">Warisan Budaya</span>
-                    <h3 className="text-2xl font-serif font-bold mt-1 text-zinc-950">Uis Nipes</h3>
+                    <span className="text-inherit text-sm">Warisan Budaya</span>
+                    <h3 className="text-2xl font-serif font-bold mt-1 text-inherit">Uis Nipes</h3>
                   </div>
                   
-                  <p className="text-karo-brown mb-6 leading-relaxed">
+                  <p className="ttext-inherit mb-6 leading-relaxed">
                     Uis Nipes sering digunakan dalam acara adat seperti pernikahan, upacara keagamaan, dan penyambutan tamu kehormatan.
                   </p>
                   
                   <div className="flex items-center space-x-3 mt-auto">
                     <img src="/placeholder.svg" alt="Author" className="w-10 h-10 rounded-full object-cover border-2 border-white" />
                     <div>
-                      <p className="text-sm font-medium text-zinc-950">Penulis</p>
-                      <p className="text-xs text-karo-brown">Denis Ema</p>
+                      <p className="text-sm font-medium text-inherit">Penulis</p>
+                      <p className="text-xs text-inherit">Denis Ema</p>
                     </div>
                   </div>
                 </div>
