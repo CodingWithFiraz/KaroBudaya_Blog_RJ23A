@@ -57,7 +57,7 @@ const Index: React.FC = () => {
         {/* Destinations Sidebar + Featured Article Section */}
         <section className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Destinations sidebar */}
-          <div className="lg:col-span-3 bg-karo-cream rounded-xl p-6">
+          <div className="lg:col-span-3 bg-karo-cream dark:bg-gray-700 rounded-xl p-6">
             <h2 className="text-xl font-serif font-bold mb-4">
               Temukan Destinasi Tempat Impianmu
             </h2>
