@@ -210,7 +210,7 @@ const Index: React.FC = () => {
                 </div>
                 
                 <CardContent className="p-0">
-                  {getArticlesByCategory(category.slug).length > 0 ? getArticlesByCategory(category.slug).map(article => <Link key={article.id} to={`/article/${article.id}/${article.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`} className="flex items-start gap-4 p-4 hover:bg-gray-200 transition-colors border-b last:border-b-0">
+                  {getArticlesByCategory(category.slug).length > 0 ? getArticlesByCategory(category.slug).map(article => <Link key={article.id} to={`/article/${article.id}/${article.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`} className="flex items-start gap-4 p-4 hover:bg-karo-darkbeige dark:hover:bg-gray-600  transition-colors border-b last:border-b-0">
                         <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-20 h-20 object-cover rounded" />
                         <div>
                           <h4 className="font-medium line-clamp-2 hover:text-karo-gold transition-colors">
