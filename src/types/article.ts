@@ -5,7 +5,7 @@ export type Category =
   | 'Tari Karo'
   | 'Kuliner Karo'
   | 'Budaya & Tradisi Karo'
-  | 'Musik Karo'
+  | 'Budaya'
   | 'Pakaian Adat';
 
 export interface MapLocation {

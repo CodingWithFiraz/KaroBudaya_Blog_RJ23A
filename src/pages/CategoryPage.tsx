@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -23,7 +22,7 @@ const CategoryPage: React.FC = () => {
         'tari-karo': 'Tari Karo',
         'kuliner-karo': 'Kuliner Karo',
         'budaya-tradisi-karo': 'Budaya & Tradisi Karo',
-        'musik-karo': 'Musik Karo',
+        'budaya': 'Budaya',
         'pakaian-adat': 'Pakaian Adat'
       };
       
@@ -45,7 +44,7 @@ const CategoryPage: React.FC = () => {
       'Tari Karo': 'Tari',
       'Kuliner Karo': 'Makanan',
       'Budaya & Tradisi Karo': 'Budaya & Tradisi',
-      'Musik Karo': 'Alat Musik',
+      'Budaya': 'Budaya',
       'Pakaian Adat': 'Pakaian Adat'
     };
     

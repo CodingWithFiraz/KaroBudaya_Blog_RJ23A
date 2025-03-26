@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -29,6 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import TextToSpeech from '@/components/TextToSpeech';
 
 const ArticleView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -93,11 +93,9 @@ const ArticleView: React.FC = () => {
     }
   };
 
-  // Function to process content with inline images
   const processContent = (content: string) => {
     if (!article.inlineImages) return content;
     
-    // This is a simplified implementation; in a real app, you might use a more robust approach
     let processedContent = content;
     article.inlineImages.forEach(img => {
       processedContent = processedContent.replace(`[image:${img.id}]`, `<img src="${img.url}" alt="inline image" class="my-4 rounded-lg max-w-full h-auto" />`);
@@ -162,7 +160,6 @@ const ArticleView: React.FC = () => {
             </Carousel>
           </div>
         ) : (
-          // Featured Image as fallback if no carousel images
           <div className="w-full h-[400px] relative mb-8">
             <img 
               src={article.featuredImage || '/placeholder.svg'} 
@@ -183,7 +180,6 @@ const ArticleView: React.FC = () => {
             </button>
             
             <div className="flex space-x-2">
-              {/* Text Size Controls - Updated to use T icons with different sizes */}
               <TooltipProvider>
                 <div className="flex items-center bg-white dark:bg-gray-800 rounded-full shadow px-2 py-1 mr-4">
                   <Tooltip>
@@ -291,7 +287,6 @@ const ArticleView: React.FC = () => {
               </div>
             </div>
             
-            {/* Map and Location Info */}
             <div className="md:col-span-1">
               {article.mapLocation ? (
                 <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
@@ -336,6 +331,14 @@ const ArticleView: React.FC = () => {
             </div>
           </div>
         </div>
+        
+        {article && (
+          <TextToSpeech 
+            title={article.title} 
+            author={article.author} 
+            content={article.content} 
+          />
+        )}
       </main>
       
       <Footer />

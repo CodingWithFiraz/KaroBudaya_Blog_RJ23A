@@ -41,7 +41,7 @@ const Header: React.FC = () => {
     { name: 'Tempat', path: '/category/destinasi-tempat' },
     { name: 'Kuliner', path: '/category/kuliner-karo' },
     { name: 'Sejarah', path: '/category/budaya-tradisi-karo' },
-    { name: 'Alat Musik', path: '/category/musik-karo' },
+    { name: 'Budaya', path: '/category/budaya' },
   ];
   
   const isActive = (path: string) => {

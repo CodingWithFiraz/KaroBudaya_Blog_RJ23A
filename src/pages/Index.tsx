@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -42,8 +41,8 @@ const Index: React.FC = () => {
 
   // Category groups for display
   const categoryGroups = [{
-    title: 'Musik Karo',
-    slug: 'musik-karo'
+    title: 'Budaya',
+    slug: 'budaya'
   }, {
     title: 'Kuliner Karo',
     slug: 'kuliner-karo'
@@ -55,7 +54,7 @@ const Index: React.FC = () => {
   // Helper function to get articles by category
   const getArticlesByCategory = (categorySlug: string) => {
     const categoryMap: Record<string, string> = {
-      'musik-karo': 'Musik Karo',
+      'budaya': 'Budaya',
       'kuliner-karo': 'Kuliner Karo',
       'budaya-tradisi-karo': 'Budaya & Tradisi Karo'
     };

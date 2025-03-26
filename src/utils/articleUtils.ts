@@ -1,4 +1,3 @@
-
 import { Article, ArticleFormData, Category, MapLocation } from '@/types/article';
 
 // In a real application, this would be replaced with API calls to a backend server
@@ -152,6 +151,6 @@ export const CATEGORIES: Category[] = [
   'Tari Karo',
   'Kuliner Karo',
   'Budaya & Tradisi Karo',
-  'Musik Karo',
+  'Budaya',
   'Pakaian Adat'
 ];
