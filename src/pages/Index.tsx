@@ -154,7 +154,7 @@ const Index: React.FC = () => {
                     <img src="/lovable-uploads/5e2f1dda-2d6c-44e5-9a3a-87b1ba1c8088.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
-                      <div className="inline-block px-2 py-1 bg-inheri text-sm font-medium rounded-sm mb-2 text-inherit">
+                      <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
                         Keunikan Budaya
                       </div>
                       
