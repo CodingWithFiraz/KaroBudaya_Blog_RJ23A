@@ -203,7 +203,7 @@ const Index: React.FC = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {categoryGroups.map(category => <Card key={category.slug} className="overflow-hidden border-none shadow-md">
-                <div className="bg-karo-cream p-4">
+                <div className="bg-karo-cream dark:bg-gray-700 p-4">
                   <h3 className="text-xl font-serif font-bold">
                     {category.title}
                   </h3>
