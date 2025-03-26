@@ -133,7 +133,7 @@ const Index: React.FC = () => {
         </section>
         
         {/* Heritage/Popular Section */}
-        <section className="py-12 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 ">
+        <section className="py-12 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors">
           <div className="container mx-auto px-4">
             <div className="flex items-baseline justify-between mb-8">
               <h2 className="text-2xl font-serif font-bold text-inherit">Warisan Budaya</h2>
