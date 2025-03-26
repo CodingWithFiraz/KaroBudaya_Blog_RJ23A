@@ -35,8 +35,6 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ title, author, content }) =
         // Try to find an Indonesian voice, otherwise use the default voice
         const voices = window.speechSynthesis.getVoices();
         const indonesianVoice = voices.find(voice => 
-          voice.lang.includes('id') && voice.gender === 'male'
-        ) || voices.find(voice => 
           voice.lang.includes('id')
         );
         
