@@ -1,18 +1,26 @@
+
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import BlogPost from '@/components/BlogPost';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, Search, Grid, LayoutGrid, List, Heart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 const Index: React.FC = () => {
   const {
     publishedArticles,
     isLoading,
     fetchArticles
   } = useArticles();
+  
+  // State for likes
+  const [likedArticles, setLikedArticles] = useState<Record<string, boolean>>({});
+  
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
@@ -23,8 +31,11 @@ const Index: React.FC = () => {
   // Get latest articles
   const latestArticles = [...publishedArticles].sort((a, b) => new Date(b.publishDate || b.createdAt).getTime() - new Date(a.publishDate || a.createdAt).getTime()).slice(0, 3);
 
-  // Get popular/heritage culture articles (simulate by taking oldest ones for demo)
-  const heritageArticles = [...publishedArticles].sort((a, b) => new Date(a.publishDate || a.createdAt).getTime() - new Date(b.publishDate || b.createdAt).getTime()).slice(0, 3);
+  // Get heritage/culture articles (simulate by taking oldest ones for demo)
+  const heritageArticles = publishedArticles.filter(article => article.category === 'Budaya & Tradisi Karo').slice(0, 3);
+  
+  // Featured heritage article
+  const featuredHeritageArticle = heritageArticles.length > 0 ? heritageArticles[0] : null;
 
   // Featured main article, normally this would be editorially chosen
   const featuredArticle = publishedArticles.length > 0 ? publishedArticles[0] : null;
@@ -50,6 +61,25 @@ const Index: React.FC = () => {
     };
     return publishedArticles.filter(article => article.category === categoryMap[categorySlug]).slice(0, 2);
   };
+  
+  // Helper function to handle like click
+  const handleLikeClick = (articleId: string) => {
+    setLikedArticles(prev => ({
+      ...prev,
+      [articleId]: !prev[articleId]
+    }));
+  };
+  
+  // Generate initials for avatar fallback
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+  
   return <div className="min-h-screen flex flex-col">
       <Header />
       
@@ -132,7 +162,7 @@ const Index: React.FC = () => {
           </div>
         </section>
         
-        {/* Heritage/Popular Section */}
+        {/* Heritage/Warisan Budaya Section - Updated Design */}
         <section className="bg-karo-cream py-12 dark:bg-gray-700">
           <div className="container mx-auto px-4">
             <div className="flex items-baseline justify-between mb-8">
@@ -143,15 +173,22 @@ const Index: React.FC = () => {
               </Link>
             </div>
             
-            {heritageArticles.length > 0 ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Main heritage article */}
+            {featuredHeritageArticle ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Main heritage image */}
                 <div>
-                  <h3 className="text-3xl font-serif font-bold mb-4 text-inherit">
-                    Jelajahi Keindahan Uis Karo
-                  </h3>
+                  <Link to={`/article/${featuredHeritageArticle.id}/${featuredHeritageArticle.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`}>
+                    <h3 className="text-3xl font-serif font-bold mb-4 text-inherit">
+                      Jelajahi Keindahan Uis Karo
+                    </h3>
+                  </Link>
                   
                   <div className="relative h-[400px] overflow-hidden rounded-xl">
-                    <img src="/lovable-uploads/5e2f1dda-2d6c-44e5-9a3a-87b1ba1c8088.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
+                    <img 
+                      src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" 
+                      alt="Uis Karo" 
+                      className="absolute inset-0 w-full h-full object-cover" 
+                    />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
                       <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
@@ -160,12 +197,10 @@ const Index: React.FC = () => {
                       
                       <div className="flex items-center space-x-4 text-white text-sm mt-4">
                         <button className="p-2 border border-white/50 rounded">
-                          <span className="sr-only">Grid View</span>
-                          □
+                          <LayoutGrid size={16} />
                         </button>
                         <button className="p-2 border border-white/50 rounded">
-                          <span className="sr-only">List View</span>
-                          ≡
+                          <List size={16} />
                         </button>
                       </div>
                     </div>
@@ -173,27 +208,44 @@ const Index: React.FC = () => {
                 </div>
                 
                 {/* Heritage article info */}
-                <div className="flex flex-col justify-center">
-                  <div className="mb-4">
-                    <span className="text-inherit text-sm">Warisan Budaya</span>
-                    <h3 className="text-2xl font-serif font-bold mt-1 text-inherit">Uis Nipes</h3>
+                <div className="flex flex-col justify-center bg-[#0a2714] text-white p-8 rounded-xl">
+                  <div className="mb-6">
+                    <span className="text-gray-300 text-sm mb-1 block">Warisan Budaya</span>
+                    <h3 className="text-2xl font-serif font-bold mt-1">Uis Nipes</h3>
                   </div>
                   
-                  <p className="ttext-inherit mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-6 leading-relaxed">
                     Uis Nipes sering digunakan dalam acara adat seperti pernikahan, upacara keagamaan, dan penyambutan tamu kehormatan.
                   </p>
                   
                   <div className="flex items-center space-x-3 mt-auto">
-                    <img src="/placeholder.svg" alt="Author" className="w-10 h-10 rounded-full object-cover border-2 border-white" />
+                    <Avatar className="h-10 w-10 border-2 border-white">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/adventurer/svg?seed=Denis%20Ema`} alt="Denis Ema" />
+                      <AvatarFallback>{getInitials("Denis Ema")}</AvatarFallback>
+                    </Avatar>
                     <div>
-                      <p className="text-sm font-medium text-inherit">Penulis</p>
-                      <p className="text-xs text-inherit">Denis Ema</p>
+                      <p className="text-sm text-gray-300">Added by</p>
+                      <p className="text-sm font-medium">Denis Ema</p>
                     </div>
+                    
+                    <button 
+                      className="ml-auto flex items-center space-x-1 bg-transparent border border-rose-500/20 text-rose-500 px-3 py-1 rounded-full hover:bg-rose-500/10 transition-colors"
+                      onClick={() => handleLikeClick(featuredHeritageArticle.id)}
+                    >
+                      <Heart 
+                        size={16} 
+                        className={likedArticles[featuredHeritageArticle.id] ? "fill-rose-500" : ""} 
+                      />
+                      <span className="text-xs">{likedArticles[featuredHeritageArticle.id] ? "Liked" : "Like"}</span>
+                    </button>
                   </div>
                 </div>
-              </div> : <div className="text-center py-12 bg-white/50 rounded-xl">
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white/50 rounded-xl">
                 <p className="text-karo-brown">Belum ada artikel warisan budaya</p>
-              </div>}
+              </div>
+            )}
           </div>
         </section>
         
