@@ -171,7 +171,7 @@ const Index: React.FC = () => {
                     
                   </Link>
                   
-                  <div className="relative h-[400px] overflow-hidden rounded-xl">
+                  <div className="relative h-[400px] overflow-hidden rounded-none">
                     <img src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
@@ -185,7 +185,7 @@ const Index: React.FC = () => {
                 </div>
                 
                 {/* Heritage article info */}
-                <div className="flex flex-col justify-center bg-[#0a2714] text-white p-8 rounded-xl">
+                <div className="flex flex-col justify-center bg-[#0a2714] text-white p-8 rounded-none">
                   <div className="mb-6">
                     <span className="text-gray-300 text-sm mb-1 block">Warisan Budaya</span>
                     <h3 className="text-2xl font-serif font-bold mt-1">Uis Nipes</h3>
