@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FeaturedImage from './FeaturedImage';
 import CategoryDropdown from './CategoryDropdown';
-import { Article, ArticleFormData, Category, MapLocation } from '@/types/article';
+import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
 import { CATEGORIES } from '@/utils/articleUtils';
 import { useArticles } from '@/hooks/useArticles';
 import { toast } from 'sonner';
@@ -26,6 +26,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     author: '',
     email: '',
     category: CATEGORIES[0],
+    subcategory: undefined,
     featuredImage: null,
     featuredImageUrl: '',
     carouselImages: [],
@@ -33,6 +34,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     inlineImages: [],
     inlineImageUrls: [],
     mapLocation: undefined,
+    summary: '',
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,10 +49,12 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         author: article.author,
         email: article.email,
         category: article.category,
+        subcategory: article.subcategory,
         featuredImageUrl: article.featuredImage,
         carouselImageUrls: article.carouselImages || [],
         inlineImageUrls: article.inlineImages ? article.inlineImages.map(img => img.url) : [],
         mapLocation: article.mapLocation,
+        summary: article.summary || '',
       });
     }
   }, [article]);
@@ -62,8 +66,8 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCategoryChange = (category: Category) => {
-    setFormData(prev => ({ ...prev, category }));
+  const handleCategoryChange = (category: Category, subcategory?: KulinerSubcategory) => {
+    setFormData(prev => ({ ...prev, category, subcategory }));
   };
 
   const handleImageChange = (file: File | null) => {
@@ -155,6 +159,12 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       return;
     }
     
+    // If category is Kuliner, validate subcategory
+    if (formData.category === 'Kuliner Karo' && !formData.subcategory) {
+      toast.error('Pilih jenis kuliner (Makanan/Minuman)');
+      return;
+    }
+    
     try {
       setIsSubmitting(true);
       
@@ -199,6 +209,21 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
               onChange={handleInputChange}
               placeholder="Tulis judul artikel yang menarik"
               className="input-field"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label htmlFor="summary" className="block text-karo-black font-medium mb-1">
+              RINGKASAN
+            </label>
+            <textarea
+              id="summary"
+              name="summary"
+              value={formData.summary}
+              onChange={handleInputChange}
+              placeholder="Tulis ringkasan singkat dari artikel (opsional)"
+              className="textarea-field"
+              rows={3}
             />
           </div>
           
@@ -281,6 +306,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             </label>
             <CategoryDropdown 
               value={formData.category} 
+              subValue={formData.subcategory}
               onChange={handleCategoryChange} 
             />
           </div>

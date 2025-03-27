@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { Article, ArticleFormData, Category } from '@/types/article';
+import { Article, ArticleFormData, Category, KulinerSubcategory } from '@/types/article';
 import { 
   getAllArticles, 
   getPublishedArticles, 
@@ -10,6 +10,7 @@ import {
   deleteArticle,
   getArticleById,
   getArticlesByCategory,
+  getArticlesBySubcategory,
   fileToDataURL
 } from '@/utils/articleUtils';
 import { toast } from 'sonner';
@@ -136,6 +137,11 @@ export function useArticles() {
     return getArticlesByCategory(category);
   };
 
+  // Get articles by subcategory (for Kuliner)
+  const getBySubcategory = (category: Category, subcategory: KulinerSubcategory): Article[] => {
+    return getArticlesBySubcategory(category, subcategory);
+  };
+
   return {
     articles,
     publishedArticles,
@@ -146,6 +152,7 @@ export function useArticles() {
     removeArticle,
     getArticle,
     getByCategory,
+    getBySubcategory,
     fetchArticles
   };
 }

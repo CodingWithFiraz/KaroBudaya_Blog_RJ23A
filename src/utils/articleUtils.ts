@@ -1,4 +1,5 @@
-import { Article, ArticleFormData, Category, MapLocation } from '@/types/article';
+
+import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
 
 // In a real application, this would be replaced with API calls to a backend server
 // For this demo, we'll use localStorage to persist data
@@ -24,6 +25,12 @@ export const getArticleById = (id: string): Article | undefined => {
 
 export const getArticlesByCategory = (category: Category): Article[] => {
   return getPublishedArticles().filter(article => article.category === category);
+};
+
+export const getArticlesBySubcategory = (category: Category, subcategory: KulinerSubcategory): Article[] => {
+  return getPublishedArticles().filter(
+    article => article.category === category && article.subcategory === subcategory
+  );
 };
 
 export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Article => {
@@ -55,6 +62,7 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
     author: articleData.author,
     email: articleData.email,
     category: articleData.category,
+    subcategory: articleData.subcategory,
     featuredImage: articleData.featuredImageUrl || '',
     carouselImages: carouselImages.length > 0 ? carouselImages : undefined,
     inlineImages: inlineImages.length > 0 ? inlineImages : undefined,
@@ -62,7 +70,8 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
     publishDate: isDraft ? undefined : now,
     isDraft,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
+    summary: articleData.summary
   };
   
   // Save to localStorage
@@ -107,13 +116,15 @@ export const updateArticle = (id: string, articleData: ArticleFormData, isDraft:
     author: articleData.author,
     email: articleData.email,
     category: articleData.category,
+    subcategory: articleData.subcategory,
     featuredImage: articleData.featuredImageUrl || existingArticle.featuredImage,
     carouselImages: carouselImages.length > 0 ? carouselImages : existingArticle.carouselImages,
     inlineImages: inlineImages.length > 0 ? inlineImages : existingArticle.inlineImages,
     mapLocation: articleData.mapLocation,
     publishDate: isDraft ? existingArticle.publishDate : (existingArticle.publishDate || now),
     isDraft,
-    updatedAt: now
+    updatedAt: now,
+    summary: articleData.summary || existingArticle.summary
   };
   
   // Replace the old article with the updated one
@@ -147,10 +158,12 @@ export const fileToDataURL = (file: File): Promise<string> => {
 
 export const CATEGORIES: Category[] = [
   'Destinasi & Tempat',
-  'Bahasa & Aksara Karo',
-  'Tari Karo',
   'Kuliner Karo',
-  'Budaya & Tradisi Karo',
-  'Budaya',
-  'Pakaian Adat'
+  'Sejarah',
+  'Budaya'
+];
+
+export const KULINER_SUBCATEGORIES: KulinerSubcategory[] = [
+  'Makanan',
+  'Minuman'
 ];

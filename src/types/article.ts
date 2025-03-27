@@ -1,12 +1,11 @@
 
 export type Category = 
   | 'Destinasi & Tempat'
-  | 'Bahasa & Aksara Karo'
-  | 'Tari Karo'
   | 'Kuliner Karo'
-  | 'Budaya & Tradisi Karo'
-  | 'Budaya'
-  | 'Pakaian Adat';
+  | 'Sejarah'
+  | 'Budaya';
+
+export type KulinerSubcategory = 'Makanan' | 'Minuman';
 
 export interface MapLocation {
   name: string;
@@ -22,6 +21,7 @@ export interface Article {
   author: string;
   email: string;
   category: Category;
+  subcategory?: KulinerSubcategory;
   featuredImage: string;
   carouselImages?: string[];
   inlineImages?: { id: string; url: string }[];
@@ -32,6 +32,7 @@ export interface Article {
   updatedAt: string;
   views?: number;
   likes?: number;
+  summary?: string;
 }
 
 export interface ArticleFormData {
@@ -40,6 +41,7 @@ export interface ArticleFormData {
   author: string;
   email: string;
   category: Category;
+  subcategory?: KulinerSubcategory;
   featuredImage?: File | null;
   featuredImageUrl?: string;
   carouselImages?: File[];
@@ -47,4 +49,5 @@ export interface ArticleFormData {
   inlineImages?: File[];
   inlineImageUrls?: string[];
   mapLocation?: MapLocation;
+  summary?: string;
 }

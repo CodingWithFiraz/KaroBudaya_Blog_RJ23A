@@ -13,6 +13,7 @@ import NotFound from '@/pages/NotFound';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'sonner';
 import KulinerPage from '@/pages/KulinerPage';
+import BudayaPage from '@/pages/BudayaPage';
 import { AuthProvider } from '@/hooks/useAuth';
 
 function App() {
@@ -35,8 +36,10 @@ function App() {
             <Route path="/editor/:id" element={<Editor />} />
             <Route path="/drafts" element={<Drafts />} />
             <Route path="/article/:id/:slug" element={<ArticleView />} />
+            <Route path="/article/:id" element={<ArticleView />} />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/category/kuliner-karo" element={<KulinerPage />} />
+            <Route path="/category/budaya" element={<BudayaPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
