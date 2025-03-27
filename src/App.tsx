@@ -14,6 +14,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from 'sonner';
 import KulinerPage from '@/pages/KulinerPage';
 import BudayaPage from '@/pages/BudayaPage';
+import SejarahPage from '@/pages/SejarahPage';
 import { AuthProvider } from '@/hooks/useAuth';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/category/kuliner-karo" element={<KulinerPage />} />
             <Route path="/category/budaya" element={<BudayaPage />} />
+            <Route path="/category/sejarah" element={<SejarahPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
