@@ -87,14 +87,14 @@ const ArticleView: React.FC = () => {
       
       <main className="flex-grow pt-24">
         {/* Location Header */}
-        <div className="container mx-auto px-4 mb-2">
+        <div className="container mx-auto mb-2 px-0">
           <p className="text-karo-brown dark:text-gray-400">
             Karo, Sumatera Utara, Indonesia
           </p>
         </div>
         
         {/* Article Title */}
-        <div className="container mx-0  px-0 mb-6 flex justify-between flex-row items-center">
+        <div className="container mx-auto  px-4 mb-6 flex justify-between flex-row items-center">
           <h1 className="text-4xl font-serif font-bold dark:text-inherit md:text-4xl flex-auto basis-2/3">
             {article.title}
           </h1>
