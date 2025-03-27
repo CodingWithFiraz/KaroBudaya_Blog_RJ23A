@@ -94,13 +94,13 @@ const ArticleView: React.FC = () => {
         </div>
         
         {/* Article Title */}
-        <div className="container mx-auto px-4 mb-6 flex justify-between flex-row">
-          <h1 className="text-4xl font-serif font-bold dark:text-inherit md:text-4xl flex-auto basis-80">
+        <div className="container mx-auto px-4 mb-6 flex justify-between flex-row items-center">
+          <h1 className="text-4xl font-serif font-bold dark:text-inherit md:text-4xl flex-auto basis-2/3">
             {article.title}
           </h1>
           
           {/* Author Info */}
-          <div className="flex-auto items-center mt-4">
+          <div className="flex items-center mt-4 basis-auto">
             <div className="w-12 h-12 rounded-full bg-karo-cream dark:bg-gray-700 overflow-hidden mr-3">
               <img src="/placeholder.svg" alt={article.author} className="w-full h-full object-cover" />
             </div>
