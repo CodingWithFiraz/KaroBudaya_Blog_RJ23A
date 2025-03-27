@@ -128,7 +128,7 @@ const ArticleView: React.FC = () => {
             <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-full h-full object-cover" />
           </div>}
         
-        <div className="container mx-auto py-8 px-[32px]">
+        <div className="container mx-auto py-8 px-[64px]">
           <div className="flex justify-between items-center mb-6">
             <button onClick={handleGoBack} className="inline-flex items-center text-karo-brown dark:text-gray-300 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors">
               <ArrowLeft size={18} className="mr-1" />
