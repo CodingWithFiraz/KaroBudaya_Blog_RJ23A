@@ -174,10 +174,10 @@ const Index: React.FC = () => {
                   <div className="relative h-[400px] overflow-hidden rounded-xl">
                     <img src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
-                      <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
+                    
+                      <div className="absolute top-10 left-10 px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
                         Keunikan Budaya
-                      </div>
+                  
                       
                       <div className="flex items-center space-x-4 text-white text-sm mt-4">
                         <button className="p-2 border border-white/50 rounded">
