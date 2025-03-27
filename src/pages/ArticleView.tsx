@@ -94,8 +94,8 @@ const ArticleView: React.FC = () => {
         </div>
         
         {/* Article Title */}
-        <div className="container mx-auto px-4 mb-6">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold dark:text-white">
+        <div className="container mx-auto px-4 mb-6 flex justify-between flex-row">
+          <h1 className="text-4xl font-serif font-bold dark:text-inherit md:text-4xl">
             {article.title}
           </h1>
           
