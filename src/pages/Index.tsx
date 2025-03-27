@@ -164,7 +164,7 @@ const Index: React.FC = () => {
               </Link>
             </div>
             
-            {featuredHeritageArticle ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {featuredHeritageArticle ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                 {/* Main heritage image */}
                 <div>
                   <Link to={`/article/${featuredHeritageArticle.id}/${featuredHeritageArticle.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`}>
@@ -174,10 +174,10 @@ const Index: React.FC = () => {
                   <div className="relative h-[400px] overflow-hidden rounded-xl">
                     <img src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
-                
-                      <div className="absolute top-4 left-4 px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
+                      <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
                         Keunikan Budaya
-                   
+                      </div>
                       
                       
                     </div>
