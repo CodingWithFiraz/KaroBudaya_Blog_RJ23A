@@ -87,7 +87,7 @@ const ArticleView: React.FC = () => {
       
       <main className="flex-grow pt-24">
         {/* Location Header */}
-        <div className="container mx-auto px-4 mb-2">
+        <div className="container mx-auto mb-2 px-0">
           <p className="text-karo-brown dark:text-gray-400">
             Karo, Sumatera Utara, Indonesia
           </p>
