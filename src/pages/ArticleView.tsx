@@ -85,7 +85,7 @@ const ArticleView: React.FC = () => {
   return <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
-      <main className="flex-grow pt-24">
+      <main className="flex-grow pt-24 px-[16px]">
         {/* Location Header */}
         <div className="container mx-auto mb-2 px-0">
           <p className="text-karo-brown dark:text-gray-400">
