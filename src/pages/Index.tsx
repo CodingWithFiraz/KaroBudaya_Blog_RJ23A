@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -10,17 +9,15 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 const Index: React.FC = () => {
   const {
     publishedArticles,
     isLoading,
     fetchArticles
   } = useArticles();
-  
+
   // State for likes
   const [likedArticles, setLikedArticles] = useState<Record<string, boolean>>({});
-  
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
@@ -33,7 +30,7 @@ const Index: React.FC = () => {
 
   // Get heritage/culture articles (using Budaya category)
   const heritageArticles = publishedArticles.filter(article => article.category === 'Budaya').slice(0, 3);
-  
+
   // Featured heritage article
   const featuredHeritageArticle = heritageArticles.length > 0 ? heritageArticles[0] : null;
 
@@ -61,7 +58,7 @@ const Index: React.FC = () => {
     };
     return publishedArticles.filter(article => article.category === categoryMap[categorySlug]).slice(0, 2);
   };
-  
+
   // Helper function to handle like click
   const handleLikeClick = (articleId: string) => {
     setLikedArticles(prev => ({
@@ -69,17 +66,11 @@ const Index: React.FC = () => {
       [articleId]: !prev[articleId]
     }));
   };
-  
+
   // Generate initials for avatar fallback
   const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
+    return name.split(' ').map(part => part[0]).join('').toUpperCase().substring(0, 2);
   };
-  
   return <div className="min-h-screen flex flex-col">
       <Header />
       
@@ -165,7 +156,7 @@ const Index: React.FC = () => {
         {/* Heritage/Warisan Budaya Section - Updated Design */}
         <section className="bg-karo-cream py-12 dark:bg-gray-700">
           <div className="container mx-auto px-4">
-            <div className="flex items-baseline justify-between mb-8">
+            <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-serif font-bold text-inherit">Warisan Budaya</h2>
               <Link to="/" className="text-karo-gold flex items-center hover:underline text-sm">
                 Lihat Koleksi Lainnya
@@ -173,22 +164,15 @@ const Index: React.FC = () => {
               </Link>
             </div>
             
-            {featuredHeritageArticle ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {featuredHeritageArticle ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Main heritage image */}
                 <div>
                   <Link to={`/article/${featuredHeritageArticle.id}/${featuredHeritageArticle.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`}>
-                    <h3 className="text-3xl font-serif font-bold mb-4 text-inherit">
-                      Jelajahi Keindahan Uis Karo
-                    </h3>
+                    
                   </Link>
                   
                   <div className="relative h-[400px] overflow-hidden rounded-xl">
-                    <img 
-                      src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" 
-                      alt="Uis Karo" 
-                      className="absolute inset-0 w-full h-full object-cover" 
-                    />
+                    <img src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
                       <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
@@ -228,24 +212,15 @@ const Index: React.FC = () => {
                       <p className="text-sm font-medium">Denis Ema</p>
                     </div>
                     
-                    <button 
-                      className="ml-auto flex items-center space-x-1 bg-transparent border border-rose-500/20 text-rose-500 px-3 py-1 rounded-full hover:bg-rose-500/10 transition-colors"
-                      onClick={() => handleLikeClick(featuredHeritageArticle.id)}
-                    >
-                      <Heart 
-                        size={16} 
-                        className={likedArticles[featuredHeritageArticle.id] ? "fill-rose-500" : ""} 
-                      />
+                    <button className="ml-auto flex items-center space-x-1 bg-transparent border border-rose-500/20 text-rose-500 px-3 py-1 rounded-full hover:bg-rose-500/10 transition-colors" onClick={() => handleLikeClick(featuredHeritageArticle.id)}>
+                      <Heart size={16} className={likedArticles[featuredHeritageArticle.id] ? "fill-rose-500" : ""} />
                       <span className="text-xs">{likedArticles[featuredHeritageArticle.id] ? "Liked" : "Like"}</span>
                     </button>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-white/50 rounded-xl">
+              </div> : <div className="text-center py-12 bg-white/50 rounded-xl">
                 <p className="text-karo-brown">Belum ada artikel warisan budaya</p>
-              </div>
-            )}
+              </div>}
           </div>
         </section>
         
