@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -30,8 +31,8 @@ const Index: React.FC = () => {
   // Get latest articles
   const latestArticles = [...publishedArticles].sort((a, b) => new Date(b.publishDate || b.createdAt).getTime() - new Date(a.publishDate || a.createdAt).getTime()).slice(0, 3);
 
-  // Get heritage/culture articles (simulate by taking oldest ones for demo)
-  const heritageArticles = publishedArticles.filter(article => article.category === 'Budaya & Tradisi Karo').slice(0, 3);
+  // Get heritage/culture articles (using Budaya category)
+  const heritageArticles = publishedArticles.filter(article => article.category === 'Budaya').slice(0, 3);
   
   // Featured heritage article
   const featuredHeritageArticle = heritageArticles.length > 0 ? heritageArticles[0] : null;
@@ -47,8 +48,8 @@ const Index: React.FC = () => {
     title: 'Kuliner Karo',
     slug: 'kuliner-karo'
   }, {
-    title: 'Budaya & Tradisi Karo',
-    slug: 'budaya-tradisi-karo'
+    title: 'Sejarah',
+    slug: 'sejarah'
   }];
 
   // Helper function to get articles by category
@@ -56,7 +57,7 @@ const Index: React.FC = () => {
     const categoryMap: Record<string, string> = {
       'budaya': 'Budaya',
       'kuliner-karo': 'Kuliner Karo',
-      'budaya-tradisi-karo': 'Budaya & Tradisi Karo'
+      'sejarah': 'Sejarah'
     };
     return publishedArticles.filter(article => article.category === categoryMap[categorySlug]).slice(0, 2);
   };

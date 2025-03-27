@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -18,12 +19,9 @@ const CategoryPage: React.FC = () => {
       // Map URL format back to Category type
       const categoryMap: Record<string, Category> = {
         'destinasi-tempat': 'Destinasi & Tempat',
-        'bahasa-aksara-karo': 'Bahasa & Aksara Karo',
-        'tari-karo': 'Tari Karo',
         'kuliner-karo': 'Kuliner Karo',
-        'budaya-tradisi-karo': 'Budaya & Tradisi Karo',
-        'budaya': 'Budaya',
-        'pakaian-adat': 'Pakaian Adat'
+        'sejarah': 'Sejarah',
+        'budaya': 'Budaya'
       };
       
       setFormattedCategory(categoryMap[category] || null);
@@ -40,12 +38,9 @@ const CategoryPage: React.FC = () => {
     // Map to more readable names for display
     const displayNameMap: Record<Category, string> = {
       'Destinasi & Tempat': 'Tempat',
-      'Bahasa & Aksara Karo': 'Bahasa & Aksara',
-      'Tari Karo': 'Tari',
       'Kuliner Karo': 'Makanan',
-      'Budaya & Tradisi Karo': 'Budaya & Tradisi',
-      'Budaya': 'Budaya',
-      'Pakaian Adat': 'Pakaian Adat'
+      'Sejarah': 'Sejarah',
+      'Budaya': 'Budaya'
     };
     
     return displayNameMap[formattedCategory] || formattedCategory;
