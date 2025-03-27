@@ -1,14 +1,10 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  
-  return (
-    <footer className="bg-karo-black dark:bg-gray-900 text-white">
+  return <footer className="bg-karo-black dark:bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -91,15 +87,8 @@ const Footer: React.FC = () => {
               Dapatkan informasi terbaru tentang budaya Karo langsung ke email Anda.
             </p>
             <div className="flex mb-2">
-              <input 
-                type="email" 
-                placeholder="Email Anda" 
-                className="bg-gray-800 text-white px-4 py-2 flex-grow rounded-l-md focus:outline-none"
-              />
-              <Button 
-                type="submit" 
-                className="bg-karo-gold hover:bg-karo-gold/90 dark:bg-karo-darkgold dark:hover:bg-karo-darkgold/90 text-white rounded-l-none"
-              >
+              <input type="email" placeholder="Email Anda" className="bg-gray-800 text-white px-4 py-2 flex-grow rounded-l-md focus:outline-none w-full" />
+              <Button type="submit" className="bg-karo-gold hover:bg-karo-gold/90 dark:bg-karo-darkgold dark:hover:bg-karo-darkgold/90 text-white rounded-l-none">
                 Daftar
               </Button>
             </div>
@@ -115,8 +104,6 @@ const Footer: React.FC = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
