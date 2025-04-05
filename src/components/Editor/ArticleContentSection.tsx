@@ -50,7 +50,8 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
       
       <FormSection title="ISI ARTIKEL">
         <BlockEditor 
-          initialContent={content}
+          initialContent={blocks.length === 0 ? content : undefined}
+          initialBlocks={blocks.length > 0 ? blocks : undefined}
           onChange={onBlocksChange}
         />
       </FormSection>

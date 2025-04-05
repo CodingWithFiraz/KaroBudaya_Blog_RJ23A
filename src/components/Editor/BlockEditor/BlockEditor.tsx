@@ -8,11 +8,12 @@ import BlockAdder from './BlockAdder';
 
 interface BlockEditorProps {
   initialContent?: string;
+  initialBlocks?: Block[];
   onChange: (blocks: Block[]) => void;
 }
 
-const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, onChange }) => {
-  const [blocks, setBlocks] = useState<Block[]>([]);
+const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks, onChange }) => {
+  const [blocks, setBlocks] = useState<Block[]>(initialBlocks || []);
 
   // Initialize with a paragraph block if no blocks exist
   useEffect(() => {
@@ -20,7 +21,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, onChange }) =
       if (initialContent) {
         // If we have initial content, create a paragraph block with it
         addBlock('paragraph', initialContent);
-      } else {
+      } else if (!initialBlocks) {
         // Otherwise create an empty paragraph block
         addBlock('paragraph');
       }

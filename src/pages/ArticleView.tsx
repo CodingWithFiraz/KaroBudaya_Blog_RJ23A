@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TextToSpeech from '@/components/TextToSpeech';
+import { Block, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 
 const ArticleView: React.FC = () => {
   const { id } = useParams<{ id: string; }>();
@@ -78,8 +79,84 @@ const ArticleView: React.FC = () => {
     }
   };
   
-  const processContent = (content: string) => {
-    return content;
+  const renderBlock = (block: Block, index: number) => {
+    switch (block.type) {
+      case 'paragraph':
+        return (
+          <p key={block.id} className="mb-4 text-karo-black dark:text-gray-100">
+            {block.content}
+          </p>
+        );
+      case 'heading':
+        const headingBlock = block as HeadingBlock;
+        switch (headingBlock.level) {
+          case 1:
+            return <h1 key={block.id} className="text-3xl font-bold mb-4 dark:text-white">{headingBlock.content}</h1>;
+          case 2:
+            return <h2 key={block.id} className="text-2xl font-bold mb-4 dark:text-white">{headingBlock.content}</h2>;
+          case 3:
+            return <h3 key={block.id} className="text-xl font-bold mb-3 dark:text-white">{headingBlock.content}</h3>;
+          default:
+            return <h2 key={block.id} className="text-2xl font-bold mb-4 dark:text-white">{headingBlock.content}</h2>;
+        }
+      case 'image':
+        const imageBlock = block as ImageBlock;
+        return (
+          <figure key={block.id} className="mb-6">
+            <img 
+              src={imageBlock.url} 
+              alt={imageBlock.alt || 'Article image'} 
+              className="w-full rounded-lg mb-2"
+            />
+            {imageBlock.caption && (
+              <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400">
+                {imageBlock.caption}
+              </figcaption>
+            )}
+          </figure>
+        );
+      case 'quote':
+        const quoteBlock = block as QuoteBlock;
+        return (
+          <blockquote 
+            key={block.id}
+            className="border-l-4 border-karo-gold pl-4 italic mb-4 text-gray-700 dark:text-gray-300"
+          >
+            <p className="mb-2">{quoteBlock.content}</p>
+            {quoteBlock.citation && (
+              <footer className="text-right text-sm font-medium">
+                — {quoteBlock.citation}
+              </footer>
+            )}
+          </blockquote>
+        );
+      default:
+        return null;
+    }
+  };
+  
+  const renderContent = () => {
+    // If article has blocks, render them
+    if (article.blocks && article.blocks.length > 0) {
+      return (
+        <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
+          {article.blocks.map((block, index) => renderBlock(block, index))}
+        </div>
+      );
+    }
+    
+    // Fallback to the old content format (text paragraphs)
+    return (
+      <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
+        {article.content.split('\n').map((paragraph, index) => 
+          paragraph ? (
+            <p key={index} className="mb-4 text-karo-black dark:text-gray-100">{paragraph}</p>
+          ) : (
+            <br key={index} />
+          )
+        )}
+      </div>
+    );
   };
   
   return (
@@ -195,19 +272,7 @@ const ArticleView: React.FC = () => {
                 Uraian
               </h2>
               
-              <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
-                {article.content.split('\n').map((paragraph, index) => 
-                  paragraph ? (
-                    <div 
-                      key={index} 
-                      className="mb-4 text-karo-black dark:text-gray-100" 
-                      dangerouslySetInnerHTML={{ __html: processContent(paragraph) }} 
-                    />
-                  ) : (
-                    <br key={index} />
-                  )
-                )}
-              </div>
+              {renderContent()}
             </div>
             
             <div className="md:col-span-1">
