@@ -3,6 +3,7 @@ import React from 'react';
 import FormSection from './FormSection';
 import CarouselImageUploader from '@/components/CarouselImageUploader';
 import InlineImageUploader from '@/components/InlineImageUploader';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ArticleContentSectionProps {
   title: string;
@@ -42,7 +43,7 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
       </FormSection>
       
       <FormSection title="RINGKASAN">
-        <textarea
+        <Textarea
           id="summary"
           name="summary"
           value={summary}
@@ -54,7 +55,7 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
       </FormSection>
       
       <FormSection title="ISI ARTIKEL">
-        <textarea
+        <Textarea
           id="content"
           name="content"
           value={content}

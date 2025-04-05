@@ -92,6 +92,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
             />
           </div>
           <div className="p-4">
+            <div className="text-sm text-karo-brown dark:text-gray-400 mb-2">Sejarah</div>
             <Link to={`/article/${article.id}/${slug}`}>
               <h3 className="text-xl font-serif font-semibold mb-2 hover:text-karo-gold dark:hover:text-karo-darkgold transition-colors">
                 {article.title}
@@ -100,6 +101,12 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
             <p className="text-karo-brown dark:text-gray-300 text-sm line-clamp-3">
               {article.summary || article.content.substring(0, 150)}...
             </p>
+            <Link 
+              to={`/article/${article.id}/${slug}`} 
+              className="text-sm text-karo-brown dark:text-gray-300 hover:text-karo-gold dark:hover:text-karo-darkgold block mt-2"
+            >
+              Baca Selengkapnya
+            </Link>
           </div>
         </Card>
       </div>
