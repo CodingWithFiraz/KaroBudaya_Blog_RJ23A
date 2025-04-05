@@ -4,14 +4,18 @@ import FormSection from './FormSection';
 import CarouselImageUploader from '@/components/CarouselImageUploader';
 import InlineImageUploader from '@/components/InlineImageUploader';
 import { Textarea } from '@/components/ui/textarea';
+import BlockEditor from './BlockEditor/BlockEditor';
+import { Block } from '@/types/blocks';
 
 interface ArticleContentSectionProps {
   title: string;
   summary: string;
   content: string;
+  blocks: Block[];
   carouselImageUrls: string[];
   inlineImageUrls: string[];
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlocksChange: (blocks: Block[]) => void;
   onCarouselImagesChange: (files: File[]) => void;
   onCarouselImageRemove: (index: number) => void;
   onInlineImageChange: (files: File[]) => void;
@@ -21,9 +25,11 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
   title,
   summary,
   content,
+  blocks,
   carouselImageUrls,
   inlineImageUrls,
   onInputChange,
+  onBlocksChange,
   onCarouselImagesChange,
   onCarouselImageRemove,
   onInlineImageChange
@@ -55,14 +61,9 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
       </FormSection>
       
       <FormSection title="ISI ARTIKEL">
-        <Textarea
-          id="content"
-          name="content"
-          value={content}
-          onChange={onInputChange}
-          placeholder="Tulis artikel dengan bahasa yang jelas dan informatif"
-          className="textarea-field"
-          rows={10}
+        <BlockEditor 
+          initialContent={content}
+          onChange={onBlocksChange}
         />
       </FormSection>
       

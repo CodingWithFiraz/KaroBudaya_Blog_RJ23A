@@ -14,6 +14,8 @@ export interface MapLocation {
   address?: string;
 }
 
+import { Block } from './blocks';
+
 export interface Article {
   id: string;
   title: string;
@@ -33,6 +35,7 @@ export interface Article {
   views?: number;
   likes?: number;
   summary?: string;
+  blocks?: Block[];
 }
 
 export interface ArticleFormData {
@@ -50,4 +53,5 @@ export interface ArticleFormData {
   inlineImageUrls?: string[];
   mapLocation?: MapLocation;
   summary?: string;
+  blocks?: Block[];
 }

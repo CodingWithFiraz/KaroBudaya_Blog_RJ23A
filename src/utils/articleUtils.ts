@@ -1,5 +1,6 @@
 
 import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
+import { Block } from '@/types/blocks';
 
 // In a real application, this would be replaced with API calls to a backend server
 // For this demo, we'll use localStorage to persist data
@@ -71,7 +72,8 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
     isDraft,
     createdAt: now,
     updatedAt: now,
-    summary: articleData.summary
+    summary: articleData.summary,
+    blocks: articleData.blocks
   };
   
   // Save to localStorage
@@ -124,7 +126,8 @@ export const updateArticle = (id: string, articleData: ArticleFormData, isDraft:
     publishDate: isDraft ? existingArticle.publishDate : (existingArticle.publishDate || now),
     isDraft,
     updatedAt: now,
-    summary: articleData.summary || existingArticle.summary
+    summary: articleData.summary || existingArticle.summary,
+    blocks: articleData.blocks || existingArticle.blocks
   };
   
   // Replace the old article with the updated one

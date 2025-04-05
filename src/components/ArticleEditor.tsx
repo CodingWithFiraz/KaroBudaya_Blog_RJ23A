@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
+import { Block } from '@/types/blocks';
 import { CATEGORIES } from '@/utils/articleUtils';
 import { useArticles } from '@/hooks/useArticles';
 import { toast } from 'sonner';
@@ -38,6 +39,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     summary: '',
   });
   
+  const [blocks, setBlocks] = useState<Block[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMapPicker, setShowMapPicker] = useState(false);
 
@@ -57,6 +59,11 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         mapLocation: article.mapLocation,
         summary: article.summary || '',
       });
+      
+      // If there are blocks stored in the article, load them
+      if (article.blocks) {
+        setBlocks(article.blocks);
+      }
     }
   }, [article]);
 
@@ -65,6 +72,33 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlocksChange = (newBlocks: Block[]) => {
+    setBlocks(newBlocks);
+    
+    // Also update the content field with a serialized version of the blocks
+    // This ensures backward compatibility
+    const content = serializeBlocks(newBlocks);
+    setFormData(prev => ({ ...prev, content }));
+  };
+  
+  // Helper function to serialize blocks to plain text
+  const serializeBlocks = (blocks: Block[]): string => {
+    return blocks.map(block => {
+      switch (block.type) {
+        case 'paragraph':
+          return block.content;
+        case 'heading':
+          return `${Array(block.level + 1).join('#')} ${block.content}`;
+        case 'image':
+          return `[Image: ${block.caption || 'Untitled'}]`;
+        case 'quote':
+          return `> ${block.content}${block.citation ? `\n— ${block.citation}` : ''}`;
+        default:
+          return '';
+      }
+    }).join('\n\n');
   };
 
   const handleCategoryChange = (category: Category, subcategory?: KulinerSubcategory) => {
@@ -131,7 +165,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       return false;
     }
     
-    if (!formData.content.trim()) {
+    if (blocks.length === 0) {
       toast.error('Konten artikel tidak boleh kosong');
       return false;
     }
@@ -175,13 +209,19 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     try {
       setIsSubmitting(true);
       
+      // Include blocks in the submission data
+      const submissionData = {
+        ...formData,
+        blocks
+      };
+      
       if (article) {
         // Update existing article
-        await editArticle(article.id, formData, isDraft);
+        await editArticle(article.id, submissionData, isDraft);
         navigate(isDraft ? '/drafts' : `/article/${article.id}`);
       } else {
         // Create new article
-        const newArticle = await createArticle(formData, isDraft);
+        const newArticle = await createArticle(submissionData, isDraft);
         navigate(isDraft ? '/drafts' : `/article/${newArticle.id}`);
       }
     } catch (error) {
@@ -208,9 +248,11 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             title={formData.title}
             summary={formData.summary || ''}
             content={formData.content}
+            blocks={blocks}
             carouselImageUrls={formData.carouselImageUrls || []}
             inlineImageUrls={formData.inlineImageUrls || []}
             onInputChange={handleInputChange}
+            onBlocksChange={handleBlocksChange}
             onCarouselImagesChange={handleCarouselImagesChange}
             onCarouselImageRemove={removeCarouselImage}
             onInlineImageChange={handleInlineImageChange}

@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -140,6 +141,19 @@
   
   .card-hover {
     @apply transition-all duration-300 hover:shadow-md hover:translate-y-[-4px];
+  }
+  
+  /* Block Editor Styles */
+  .block-item {
+    @apply relative transition-all duration-200;
+  }
+  
+  .block-item:hover {
+    @apply z-10;
+  }
+  
+  .block-controls {
+    @apply transition-opacity duration-200;
   }
 }
 
