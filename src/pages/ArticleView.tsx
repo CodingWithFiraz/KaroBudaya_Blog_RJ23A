@@ -1,40 +1,39 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
-import { Calendar, User, Mail, Edit, Trash2, ArrowLeft, MapPin, ExternalLink } from 'lucide-react';
+import { Calendar, User, Mail, Edit, Trash2, ArrowLeft, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TextToSpeech from '@/components/TextToSpeech';
+
 const ArticleView: React.FC = () => {
-  const {
-    id
-  } = useParams<{
-    id: string;
-  }>();
+  const { id } = useParams<{ id: string; }>();
   const navigate = useNavigate();
-  const {
-    getArticle,
-    removeArticle
-  } = useArticles();
+  const { getArticle, removeArticle } = useArticles();
   const [textSize, setTextSize] = useState<'small' | 'medium' | 'large'>('medium');
+  
   if (!id) {
     navigate('/');
     return null;
   }
+  
   const article = getArticle(id);
+  
   useEffect(() => {
     if (!article) {
       toast.error('Artikel tidak ditemukan');
       navigate('/');
     }
   }, [article, navigate]);
+  
   if (!article) {
     return null;
   }
+  
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Draft';
     const date = new Date(dateString);
@@ -44,6 +43,7 @@ const ArticleView: React.FC = () => {
       year: 'numeric'
     }).format(date);
   };
+  
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
       try {
@@ -54,9 +54,11 @@ const ArticleView: React.FC = () => {
       }
     }
   };
+  
   const handleGoBack = () => {
     navigate(-1);
   };
+  
   const getGoogleMapsUrl = (location?: {
     latitude: number;
     longitude: number;
@@ -64,6 +66,7 @@ const ArticleView: React.FC = () => {
     if (!location) return '';
     return `https://www.google.com/maps?q=${location.latitude},${location.longitude}`;
   };
+  
   const getTextSizeClass = () => {
     switch (textSize) {
       case 'small':
@@ -74,15 +77,13 @@ const ArticleView: React.FC = () => {
         return 'text-base';
     }
   };
+  
   const processContent = (content: string) => {
-    if (!article.inlineImages) return content;
-    let processedContent = content;
-    article.inlineImages.forEach(img => {
-      processedContent = processedContent.replace(`[image:${img.id}]`, `<img src="${img.url}" alt="inline image" class="my-4 rounded-lg max-w-full h-auto" />`);
-    });
-    return processedContent;
+    return content;
   };
-  return <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
+  
+  return (
+    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
       <main className="flex-grow pt-24 px-[32px]">
@@ -111,22 +112,10 @@ const ArticleView: React.FC = () => {
           </div>
         </div>
         
-        {/* Image Carousel */}
-        {article.carouselImages && article.carouselImages.length > 0 ? <div className="container mx-auto px-4 mb-8">
-            <Carousel className="w-full">
-              <CarouselContent>
-                {article.carouselImages.map((image, index) => <CarouselItem key={index}>
-                    <div className="h-[400px] w-full overflow-hidden rounded-lg">
-                      <img src={image} alt={`Slide ${index + 1}`} className="w-full h-full object-cover" />
-                    </div>
-                  </CarouselItem>)}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </div> : <div className="w-full h-[400px] relative mb-8">
-            <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-full h-full object-cover" />
-          </div>}
+        {/* Featured Image */}
+        <div className="w-full h-[400px] relative mb-8">
+          <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-full h-full object-cover" />
+        </div>
         
         <div className="container mx-auto py-8 sm:px-[16px] px-0">
           <div className="flex justify-between items-center mb-6">
@@ -207,18 +196,33 @@ const ArticleView: React.FC = () => {
               </h2>
               
               <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
-                {article.content.split('\n').map((paragraph, index) => paragraph ? <div key={index} className="mb-4 text-karo-black dark:text-gray-100" dangerouslySetInnerHTML={{
-                __html: processContent(paragraph)
-              }} /> : <br key={index} />)}
+                {article.content.split('\n').map((paragraph, index) => 
+                  paragraph ? (
+                    <div 
+                      key={index} 
+                      className="mb-4 text-karo-black dark:text-gray-100" 
+                      dangerouslySetInnerHTML={{ __html: processContent(paragraph) }} 
+                    />
+                  ) : (
+                    <br key={index} />
+                  )
+                )}
               </div>
             </div>
             
             <div className="md:col-span-1">
-              {article.mapLocation ? <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
+              {article.mapLocation ? (
+                <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
                   <div className="h-48 bg-gray-200 relative">
-                    <iframe src={`https://maps.google.com/maps?q=${article.mapLocation.latitude},${article.mapLocation.longitude}&z=15&output=embed`} width="100%" height="100%" style={{
-                  border: 0
-                }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe 
+                      src={`https://maps.google.com/maps?q=${article.mapLocation.latitude},${article.mapLocation.longitude}&z=15&output=embed`} 
+                      width="100%" 
+                      height="100%" 
+                      style={{ border: 0 }} 
+                      allowFullScreen 
+                      loading="lazy" 
+                      referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
                   </div>
                   
                   <div className="p-4">
@@ -232,13 +236,21 @@ const ArticleView: React.FC = () => {
                       </div>
                     </div>
                     
-                    <a href={getGoogleMapsUrl(article.mapLocation)} target="_blank" rel="noopener noreferrer" className="w-full block text-center py-2 mt-2 bg-karo-gold dark:bg-karo-darkgold text-white rounded-md hover:bg-opacity-90 transition-colors">
+                    <a 
+                      href={getGoogleMapsUrl(article.mapLocation)} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="w-full block text-center py-2 mt-2 bg-karo-gold dark:bg-karo-darkgold text-white rounded-md hover:bg-opacity-90 transition-colors"
+                    >
                       Dapatkan petunjuk arah
                     </a>
                   </div>
-                </div> : <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
+                </div>
+              ) : (
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
                   <p className="text-gray-500 dark:text-gray-400">Lokasi tidak tersedia</p>
-                </div>}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -247,6 +259,8 @@ const ArticleView: React.FC = () => {
       </main>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default ArticleView;

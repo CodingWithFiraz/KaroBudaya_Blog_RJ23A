@@ -38,23 +38,6 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
   const articles = getAllArticles();
   const now = new Date().toISOString();
   
-  // Process carousel images
-  const carouselImages = [...(articleData.carouselImageUrls || [])];
-  if (articleData.carouselImages && articleData.carouselImages.length > 0) {
-    // In a real app, you would upload these to a server
-    // Here we're just using the local files
-  }
-  
-  // Process inline images
-  const inlineImages = articleData.inlineImageUrls ? 
-    articleData.inlineImageUrls.map((url, idx) => ({ id: `existing-${idx}`, url })) : 
-    [];
-  
-  if (articleData.inlineImages && articleData.inlineImages.length > 0) {
-    // In a real app, you would upload these to a server
-    // Here we're just using the local files
-  }
-  
   // Create a new article
   const newArticle: Article = {
     id: crypto.randomUUID(),
@@ -65,8 +48,6 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
     category: articleData.category,
     subcategory: articleData.subcategory,
     featuredImage: articleData.featuredImageUrl || '',
-    carouselImages: carouselImages.length > 0 ? carouselImages : undefined,
-    inlineImages: inlineImages.length > 0 ? inlineImages : undefined,
     mapLocation: articleData.mapLocation,
     publishDate: isDraft ? undefined : now,
     isDraft,
@@ -93,23 +74,6 @@ export const updateArticle = (id: string, articleData: ArticleFormData, isDraft:
   const now = new Date().toISOString();
   const existingArticle = articles[articleIndex];
   
-  // Process carousel images
-  const carouselImages = [...(articleData.carouselImageUrls || [])];
-  if (articleData.carouselImages && articleData.carouselImages.length > 0) {
-    // In a real app, you would upload these to a server
-    // Here we're just using the local files
-  }
-  
-  // Process inline images
-  const inlineImages = articleData.inlineImageUrls ? 
-    articleData.inlineImageUrls.map((url, idx) => ({ id: `existing-${idx}`, url })) : 
-    [];
-  
-  if (articleData.inlineImages && articleData.inlineImages.length > 0) {
-    // In a real app, you would upload these to a server
-    // Here we're just using the local files
-  }
-  
   // Update the article
   const updatedArticle: Article = {
     ...existingArticle,
@@ -120,8 +84,6 @@ export const updateArticle = (id: string, articleData: ArticleFormData, isDraft:
     category: articleData.category,
     subcategory: articleData.subcategory,
     featuredImage: articleData.featuredImageUrl || existingArticle.featuredImage,
-    carouselImages: carouselImages.length > 0 ? carouselImages : existingArticle.carouselImages,
-    inlineImages: inlineImages.length > 0 ? inlineImages : existingArticle.inlineImages,
     mapLocation: articleData.mapLocation,
     publishDate: isDraft ? existingArticle.publishDate : (existingArticle.publishDate || now),
     isDraft,
