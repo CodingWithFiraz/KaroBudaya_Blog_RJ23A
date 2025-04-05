@@ -40,13 +40,20 @@ const Header: React.FC = () => {
   const navLinks = [
     { name: 'Tempat', path: '/category/destinasi-tempat' },
     { name: 'Kuliner', path: '/category/kuliner-karo' },
-    { name: 'Sejarah', path: '/category/budaya-tradisi-karo' },
+    { name: 'Sejarah', path: '/category/sejarah' },
     { name: 'Budaya', path: '/category/budaya' },
   ];
   
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+    
+    if (path === '/category/sejarah' && 
+       (location.pathname === '/category/sejarah' || 
+        location.pathname === '/category/budaya-tradisi-karo')) {
+      return true;
+    }
+    
+    return location.pathname === path;
   };
   
   const toggleMobileMenu = () => {

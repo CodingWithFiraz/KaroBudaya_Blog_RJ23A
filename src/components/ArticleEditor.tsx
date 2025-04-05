@@ -31,10 +31,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     subcategory: undefined,
     featuredImage: null,
     featuredImageUrl: '',
-    carouselImages: [],
-    carouselImageUrls: [],
-    inlineImages: [],
-    inlineImageUrls: [],
     mapLocation: undefined,
     summary: '',
   });
@@ -54,8 +50,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         category: article.category,
         subcategory: article.subcategory,
         featuredImageUrl: article.featuredImage,
-        carouselImageUrls: article.carouselImages || [],
-        inlineImageUrls: article.inlineImages ? article.inlineImages.map(img => img.url) : [],
         mapLocation: article.mapLocation,
         summary: article.summary || '',
       });
@@ -110,36 +104,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       ...prev, 
       featuredImage: file,
       featuredImageUrl: file ? '' : prev.featuredImageUrl
-    }));
-  };
-
-  const handleCarouselImagesChange = (files: File[]) => {
-    setFormData(prev => ({
-      ...prev,
-      carouselImages: [...(prev.carouselImages || []), ...files]
-    }));
-  };
-
-  const removeCarouselImage = (index: number) => {
-    setFormData(prev => {
-      const newCarouselImages = [...(prev.carouselImages || [])];
-      newCarouselImages.splice(index, 1);
-      
-      const newCarouselImageUrls = [...(prev.carouselImageUrls || [])];
-      newCarouselImageUrls.splice(index, 1);
-      
-      return {
-        ...prev,
-        carouselImages: newCarouselImages,
-        carouselImageUrls: newCarouselImageUrls
-      };
-    });
-  };
-
-  const handleInlineImageChange = (files: File[]) => {
-    setFormData(prev => ({
-      ...prev,
-      inlineImages: [...(prev.inlineImages || []), ...files]
     }));
   };
 
@@ -249,13 +213,8 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             summary={formData.summary || ''}
             content={formData.content}
             blocks={blocks}
-            carouselImageUrls={formData.carouselImageUrls || []}
-            inlineImageUrls={formData.inlineImageUrls || []}
             onInputChange={handleInputChange}
             onBlocksChange={handleBlocksChange}
-            onCarouselImagesChange={handleCarouselImagesChange}
-            onCarouselImageRemove={removeCarouselImage}
-            onInlineImageChange={handleInlineImageChange}
           />
         </div>
         

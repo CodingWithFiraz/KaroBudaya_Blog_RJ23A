@@ -25,8 +25,6 @@ export interface Article {
   category: Category;
   subcategory?: KulinerSubcategory;
   featuredImage: string;
-  carouselImages?: string[];
-  inlineImages?: { id: string; url: string }[];
   mapLocation?: MapLocation;
   publishDate?: string;
   isDraft: boolean;
@@ -47,10 +45,6 @@ export interface ArticleFormData {
   subcategory?: KulinerSubcategory;
   featuredImage?: File | null;
   featuredImageUrl?: string;
-  carouselImages?: File[];
-  carouselImageUrls?: string[];
-  inlineImages?: File[];
-  inlineImageUrls?: string[];
   mapLocation?: MapLocation;
   summary?: string;
   blocks?: Block[];

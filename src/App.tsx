@@ -42,6 +42,8 @@ function App() {
             <Route path="/category/kuliner-karo" element={<KulinerPage />} />
             <Route path="/category/budaya" element={<BudayaPage />} />
             <Route path="/category/sejarah" element={<SejarahPage />} />
+            {/* Add a redirect for the legacy route */}
+            <Route path="/category/budaya-tradisi-karo" element={<SejarahPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
