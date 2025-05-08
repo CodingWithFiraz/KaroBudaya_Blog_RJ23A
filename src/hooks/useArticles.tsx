@@ -11,9 +11,13 @@ import {
   getArticleById,
   getArticlesByCategory,
   getArticlesBySubcategory,
-  fileToDataURL
+  fileToDataURL,
+  initializeSampleArticles
 } from '@/utils/articleUtils';
 import { toast } from 'sonner';
+
+// Set this to true to listen for storage events from other tabs/windows
+const ENABLE_REALTIME = true;
 
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -39,6 +43,32 @@ export function useArticles() {
       setIsLoading(false);
     }
   }, []);
+
+  // Initialize sample articles if needed
+  useEffect(() => {
+    const articlesExist = getAllArticles().length > 0;
+    if (!articlesExist) {
+      initializeSampleArticles();
+      fetchArticles();
+    }
+  }, [fetchArticles]);
+
+  // Listen for storage events from other tabs/windows for real-time updates
+  useEffect(() => {
+    if (ENABLE_REALTIME) {
+      const handleStorageChange = (event: StorageEvent) => {
+        if (event.key === 'karo-blog-articles') {
+          fetchArticles();
+          toast.info('Article content updated', {
+            description: 'New changes from another device were loaded'
+          });
+        }
+      };
+      
+      window.addEventListener('storage', handleStorageChange);
+      return () => window.removeEventListener('storage', handleStorageChange);
+    }
+  }, [fetchArticles]);
 
   // Initial fetch
   useEffect(() => {

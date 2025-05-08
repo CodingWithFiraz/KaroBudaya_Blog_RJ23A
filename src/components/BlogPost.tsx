@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, User } from 'lucide-react';
+import { Calendar, User, Eye, ThumbsUp } from 'lucide-react';
 import { Article } from '@/types/article';
 import { cn } from '@/lib/utils';
 
@@ -27,6 +27,20 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-');
+
+  // Extract summary from article or use first paragraph
+  const getSummary = () => {
+    if (article.summary) return article.summary;
+    
+    if (article.blocks && article.blocks.length > 0) {
+      const paragraphs = article.blocks.filter(block => block.type === 'paragraph');
+      if (paragraphs.length > 0) {
+        return paragraphs[0].content.substring(0, 150) + '...';
+      }
+    }
+    
+    return article.content.substring(0, 150) + '...';
+  };
 
   if (variant === 'featured') {
     return (
@@ -54,15 +68,36 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
             </h2>
           </Link>
           
-          <div className="flex items-center space-x-4 text-white/80 text-sm">
-            <div className="flex items-center">
-              <User size={14} className="mr-1" />
-              <span>{article.author}</span>
+          <p className="text-white/90 mb-4 line-clamp-2">
+            {getSummary()}
+          </p>
+          
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-4 text-white/80 text-sm">
+              <div className="flex items-center">
+                <User size={14} className="mr-1" />
+                <span>{article.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar size={14} className="mr-1" />
+                <span>{formatDate(article.publishDate)}</span>
+              </div>
             </div>
-            <div className="flex items-center">
-              <Calendar size={14} className="mr-1" />
-              <span>{formatDate(article.publishDate)}</span>
-            </div>
+            
+            {article.views && (
+              <div className="flex items-center space-x-3 text-white/70 text-xs">
+                <div className="flex items-center">
+                  <Eye size={14} className="mr-1" />
+                  <span>{article.views}</span>
+                </div>
+                {article.likes && (
+                  <div className="flex items-center">
+                    <ThumbsUp size={14} className="mr-1" />
+                    <span>{article.likes}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -98,18 +133,35 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
           </Link>
           
           <p className="text-karo-brown dark:text-gray-300 mb-3 line-clamp-2">
-            {article.content.substring(0, 150)}...
+            {getSummary()}
           </p>
           
-          <div className="mt-auto flex items-center space-x-4 text-karo-brown/80 dark:text-gray-400 text-xs">
-            <div className="flex items-center">
-              <User size={12} className="mr-1" />
-              <span>{article.author}</span>
+          <div className="mt-auto flex items-center justify-between">
+            <div className="flex items-center space-x-4 text-karo-brown/80 dark:text-gray-400 text-xs">
+              <div className="flex items-center">
+                <User size={12} className="mr-1" />
+                <span>{article.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar size={12} className="mr-1" />
+                <span>{formatDate(article.publishDate)}</span>
+              </div>
             </div>
-            <div className="flex items-center">
-              <Calendar size={12} className="mr-1" />
-              <span>{formatDate(article.publishDate)}</span>
-            </div>
+            
+            {article.views && (
+              <div className="flex items-center space-x-2 text-karo-brown/70 dark:text-gray-500 text-xs">
+                <div className="flex items-center">
+                  <Eye size={12} className="mr-1" />
+                  <span>{article.views}</span>
+                </div>
+                {article.likes && (
+                  <div className="flex items-center ml-2">
+                    <ThumbsUp size={12} className="mr-1" />
+                    <span>{article.likes}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -151,7 +203,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
           </Link>
           
           <p className="text-karo-brown dark:text-gray-300 text-sm mb-3 line-clamp-3">
-            {article.content.substring(0, 120)}...
+            {getSummary()}
           </p>
         </div>
         

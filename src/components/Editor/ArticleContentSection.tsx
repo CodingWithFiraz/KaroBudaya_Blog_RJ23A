@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import FormSection from './FormSection';
 import { Textarea } from '@/components/ui/textarea';
 import BlockEditor from './BlockEditor/BlockEditor';
@@ -22,6 +22,20 @@ const ArticleContentSection: React.FC<ArticleContentSectionProps> = ({
   onInputChange,
   onBlocksChange
 }) => {
+  // Trigger localStorage sync event to enable real-time updates
+  useEffect(() => {
+    const triggerSync = () => {
+      // This is a dummy operation just to trigger a storage event
+      // Real sync happens through the localStorage event listeners
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    };
+    
+    // Set up interval for periodic sync
+    const syncInterval = setInterval(triggerSync, 5000);
+    
+    return () => clearInterval(syncInterval);
+  }, []);
+
   return (
     <>
       <FormSection title="JUDUL">
