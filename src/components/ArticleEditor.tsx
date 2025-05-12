@@ -38,6 +38,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMapPicker, setShowMapPicker] = useState(false);
+  const [articleId, setArticleId] = useState<string>('');
 
   // Initialize form with article data if editing
   useEffect(() => {
@@ -58,14 +59,43 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       if (article.blocks) {
         setBlocks(article.blocks);
       }
+      
+      // Set articleId for real-time sync
+      setArticleId(article.id);
+    } else {
+      // Generate a temporary ID for new articles
+      setArticleId(`new-${Date.now()}`);
     }
   }, [article]);
+
+  // Listen for storage events to sync featured image
+  useEffect(() => {
+    if (!articleId) return;
+    
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === `article-featured-image-${articleId}` && event.newValue) {
+        setFormData(prev => ({
+          ...prev,
+          featuredImageUrl: event.newValue || ''
+        }));
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [articleId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Store author and email in localStorage for sync
+    if (name === 'author' || name === 'email') {
+      localStorage.setItem(`article-${name}-${articleId}`, value);
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
   };
 
   const handleBlocksChange = (newBlocks: Block[]) => {
@@ -97,6 +127,17 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
 
   const handleCategoryChange = (category: Category, subcategory?: KulinerSubcategory) => {
     setFormData(prev => ({ ...prev, category, subcategory }));
+    
+    // Store category and subcategory in localStorage for sync
+    if (articleId) {
+      localStorage.setItem(`article-category-${articleId}`, category);
+      if (subcategory) {
+        localStorage.setItem(`article-subcategory-${articleId}`, subcategory);
+      } else {
+        localStorage.removeItem(`article-subcategory-${articleId}`);
+      }
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
   };
 
   const handleImageChange = (file: File | null) => {
@@ -105,6 +146,25 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       featuredImage: file,
       featuredImageUrl: file ? '' : prev.featuredImageUrl
     }));
+    
+    if (file) {
+      // Convert to data URL and store in localStorage
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        if (dataUrl && articleId) {
+          localStorage.setItem(`article-featured-image-${articleId}`, dataUrl);
+          localStorage.setItem('article-sync-timestamp', Date.now().toString());
+          
+          // Also update formData
+          setFormData(prev => ({ ...prev, featuredImageUrl: dataUrl }));
+        }
+      };
+      reader.readAsDataURL(file);
+    } else if (articleId) {
+      localStorage.removeItem(`article-featured-image-${articleId}`);
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
   };
 
   const handleMapLocationChange = (location: MapLocation) => {
@@ -113,6 +173,12 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       mapLocation: location
     }));
     setShowMapPicker(false);
+    
+    // Store location in localStorage for sync
+    if (articleId) {
+      localStorage.setItem(`article-map-location-${articleId}`, JSON.stringify(location));
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
   };
 
   const removeMapLocation = () => {
@@ -120,6 +186,12 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       ...prev,
       mapLocation: undefined
     }));
+    
+    // Remove location from localStorage
+    if (articleId) {
+      localStorage.removeItem(`article-map-location-${articleId}`);
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
   };
 
   const validateForm = (): boolean => {
@@ -179,20 +251,52 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         blocks
       };
       
+      let savedArticle;
+      
       if (article) {
         // Update existing article
-        await editArticle(article.id, submissionData, isDraft);
+        savedArticle = await editArticle(article.id, submissionData, isDraft);
+        
+        // Clean up localStorage for this article
+        cleanupLocalStorage(article.id);
+        
         navigate(isDraft ? '/drafts' : `/article/${article.id}`);
       } else {
         // Create new article
-        const newArticle = await createArticle(submissionData, isDraft);
-        navigate(isDraft ? '/drafts' : `/article/${newArticle.id}`);
+        savedArticle = await createArticle(submissionData, isDraft);
+        
+        // Clean up localStorage for temporary ID
+        cleanupLocalStorage(articleId);
+        
+        navigate(isDraft ? '/drafts' : `/article/${savedArticle.id}`);
       }
     } catch (error) {
       console.error('Error submitting article:', error);
       toast.error('Gagal menyimpan artikel');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  
+  // Helper to clean up localStorage items when article is saved
+  const cleanupLocalStorage = (id: string) => {
+    localStorage.removeItem(`article-blocks-${id}`);
+    localStorage.removeItem(`article-title-${id}`);
+    localStorage.removeItem(`article-summary-${id}`);
+    localStorage.removeItem(`article-featured-image-${id}`);
+    localStorage.removeItem(`article-author-${id}`);
+    localStorage.removeItem(`article-email-${id}`);
+    localStorage.removeItem(`article-category-${id}`);
+    localStorage.removeItem(`article-subcategory-${id}`);
+    localStorage.removeItem(`article-map-location-${id}`);
+    localStorage.removeItem(`article-images-${id}`);
+    
+    // Also clean up any image blocks
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(`article-block-image-${id}-`)) {
+        localStorage.removeItem(key);
+      }
     }
   };
 
@@ -215,6 +319,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             blocks={blocks}
             onInputChange={handleInputChange}
             onBlocksChange={handleBlocksChange}
+            articleId={articleId}
           />
         </div>
         
@@ -223,6 +328,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             <FeaturedImage 
               imageUrl={formData.featuredImageUrl} 
               onImageChange={handleImageChange} 
+              articleId={articleId}
             />
           </div>
           

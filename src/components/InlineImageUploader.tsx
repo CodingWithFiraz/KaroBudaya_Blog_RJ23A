@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Upload, X, Copy } from 'lucide-react';
 import { fileToDataURL } from '@/utils/articleUtils';
 import { toast } from 'sonner';
@@ -6,13 +7,47 @@ import { toast } from 'sonner';
 interface InlineImageUploaderProps {
   existingImages?: string[];
   onImagesChange: (files: File[]) => void;
+  articleId?: string;
 }
 
 const InlineImageUploader: React.FC<InlineImageUploaderProps> = ({
   existingImages = [],
-  onImagesChange
+  onImagesChange,
+  articleId
 }) => {
   const [previewImages, setPreviewImages] = useState<{id: string; url: string}[]>([]);
+  
+  // Load previously saved images from localStorage on component mount
+  useEffect(() => {
+    if (articleId) {
+      const savedImages = localStorage.getItem(`article-images-${articleId}`);
+      if (savedImages) {
+        setPreviewImages(JSON.parse(savedImages));
+      }
+    }
+  }, [articleId]);
+  
+  // Save images to localStorage whenever they change
+  useEffect(() => {
+    if (articleId && previewImages.length > 0) {
+      localStorage.setItem(`article-images-${articleId}`, JSON.stringify(previewImages));
+      // Trigger sync event
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
+  }, [previewImages, articleId]);
+  
+  // Listen for storage events from other tabs/windows
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (articleId && event.key === `article-images-${articleId}`) {
+        const newImages = JSON.parse(event.newValue || '[]');
+        setPreviewImages(newImages);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [articleId]);
   
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -32,7 +67,8 @@ const InlineImageUploader: React.FC<InlineImageUploaderProps> = ({
       }
     }
     
-    setPreviewImages([...previewImages, ...newPreviews]);
+    const updatedPreviews = [...previewImages, ...newPreviews];
+    setPreviewImages(updatedPreviews);
     onImagesChange(files);
     
     // Reset the input

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Block, BlockType, ParagraphBlock, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 import ParagraphBlockComponent from './ParagraphBlock';
@@ -10,9 +11,10 @@ interface BlockEditorProps {
   initialContent?: string;
   initialBlocks?: Block[];
   onChange: (blocks: Block[]) => void;
+  articleId?: string;
 }
 
-const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks, onChange }) => {
+const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks, onChange, articleId }) => {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks || []);
 
   // Initialize with a paragraph block if no blocks exist
@@ -28,10 +30,34 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
     }
   }, []);
 
+  // Update blocks when initialBlocks change
+  useEffect(() => {
+    if (initialBlocks && initialBlocks.length > 0) {
+      setBlocks(initialBlocks);
+    }
+  }, [initialBlocks]);
+
   // Notify parent component when blocks change
   useEffect(() => {
     onChange(blocks);
   }, [blocks, onChange]);
+
+  // Load blocks from localStorage if available
+  useEffect(() => {
+    if (articleId) {
+      const savedBlocks = localStorage.getItem(`article-blocks-${articleId}`);
+      if (savedBlocks) {
+        try {
+          const parsedBlocks = JSON.parse(savedBlocks);
+          if (parsedBlocks.length > 0) {
+            setBlocks(parsedBlocks);
+          }
+        } catch (error) {
+          console.error('Error parsing saved blocks:', error);
+        }
+      }
+    }
+  }, [articleId]);
 
   const createBlock = (type: BlockType, content: string = ''): Block => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -168,6 +194,7 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
             onMoveUp={moveBlockUp}
             onMoveDown={moveBlockDown}
             onDelete={deleteBlock}
+            articleId={articleId}
           />
         );
       case 'quote':

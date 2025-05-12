@@ -1,16 +1,43 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 
 interface FeaturedImageProps {
   imageUrl?: string;
   onImageChange: (file: File | null) => void;
+  articleId?: string;
 }
 
-const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange }) => {
+const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange, articleId }) => {
   const [preview, setPreview] = useState<string | undefined>(imageUrl);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Update preview when imageUrl prop changes
+  useEffect(() => {
+    setPreview(imageUrl);
+  }, [imageUrl]);
+
+  // Save image to localStorage when it changes
+  useEffect(() => {
+    if (articleId && preview) {
+      localStorage.setItem(`article-featured-image-${articleId}`, preview);
+    }
+  }, [preview, articleId]);
+
+  // Listen for storage events from other tabs/windows
+  useEffect(() => {
+    if (!articleId) return;
+    
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === `article-featured-image-${articleId}`) {
+        setPreview(event.newValue || undefined);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [articleId]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -66,6 +93,11 @@ const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange }
   const removeImage = () => {
     setPreview(undefined);
     onImageChange(null);
+    
+    if (articleId) {
+      localStorage.removeItem(`article-featured-image-${articleId}`);
+    }
+    
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }

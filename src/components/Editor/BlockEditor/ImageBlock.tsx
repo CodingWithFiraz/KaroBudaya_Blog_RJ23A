@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ImageBlock as ImageBlockType } from '@/types/blocks';
 import BlockControls from './BlockControls';
 import { Upload, X } from 'lucide-react';
@@ -13,6 +13,7 @@ interface ImageBlockProps {
   onMoveUp: (id: string) => void;
   onMoveDown: (id: string) => void;
   onDelete: (id: string) => void;
+  articleId?: string;
 }
 
 const ImageBlock: React.FC<ImageBlockProps> = ({
@@ -22,9 +23,37 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
   onChange,
   onMoveUp,
   onMoveDown,
-  onDelete
+  onDelete,
+  articleId
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Store image in localStorage when it changes
+  useEffect(() => {
+    if (articleId && block.url) {
+      const imageKey = `article-block-image-${articleId}-${block.id}`;
+      localStorage.setItem(imageKey, block.url);
+      
+      // Trigger sync event
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
+    }
+  }, [block.url, block.id, articleId]);
+
+  // Listen for storage events from other tabs/windows
+  useEffect(() => {
+    if (!articleId) return;
+    
+    const imageKey = `article-block-image-${articleId}-${block.id}`;
+    
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === imageKey && event.newValue && event.newValue !== block.url) {
+        onChange(block.id, { url: event.newValue });
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [articleId, block.id, block.url, onChange]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -45,6 +74,11 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
 
   const handleRemoveImage = () => {
     onChange(block.id, { url: '' });
+    
+    // Also remove from localStorage if articleId is provided
+    if (articleId) {
+      localStorage.removeItem(`article-block-image-${articleId}-${block.id}`);
+    }
   };
 
   return (

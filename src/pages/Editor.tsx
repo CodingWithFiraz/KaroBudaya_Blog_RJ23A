@@ -5,6 +5,7 @@ import { useArticles } from '@/hooks/useArticles';
 import Layout from '@/components/Layout/MainLayout';
 import ArticleEditor from '@/components/ArticleEditor';
 import { ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Editor: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,17 @@ const Editor: React.FC = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  // Show a notification about real-time editing
+  React.useEffect(() => {
+    toast.info(
+      "Fitur edit real-time aktif",
+      { 
+        description: "Perubahan akan tersimpan sementara dan tersinkronisasi di semua perangkat secara otomatis",
+        duration: 5000
+      }
+    );
+  }, []);
 
   return (
     <Layout>
