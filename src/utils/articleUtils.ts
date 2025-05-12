@@ -333,7 +333,10 @@ export const initializeSampleArticles = () => {
             summary = `Eksplorasi wisata alam di ${destinations[i]}, salah satu destinasi paling menakjubkan di Tanah Karo dengan pemandangan yang memikat dan pengalaman budaya yang autentik.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Sibayak.JPG/1024px-Sibayak.JPG";
             blocks = JSON.parse(JSON.stringify(destinasiBlocks));
-            blocks[1].content = `Keindahan ${destinations[i]}`;
+            // Fix: Check the type before accessing content property
+            if (blocks[1].type === 'heading') {
+              blocks[1].content = `Keindahan ${destinations[i]}`;
+            }
             break;
             
           case 'Kuliner Karo':
@@ -344,7 +347,10 @@ export const initializeSampleArticles = () => {
             summary = `Mengulik rahasia di balik cita rasa ${foods[i]}, hidangan tradisional yang menjadi kebanggaan kuliner masyarakat Karo dengan rempah-rempah khas pegunungan.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/7/79/Babi_panggang_Karo.jpg";
             blocks = JSON.parse(JSON.stringify(kulinerBlocks));
-            blocks[1].content = foods[i];
+            // Fix: Check the type before accessing content property
+            if (blocks[1].type === 'heading') {
+              blocks[1].content = foods[i];
+            }
             break;
             
           case 'Sejarah':
@@ -359,7 +365,10 @@ export const initializeSampleArticles = () => {
             summary = `Menelusuri jejak sejarah tentang ${historicalEvents[i]} yang menjadi bagian penting dari perjalanan masyarakat Karo dalam membentuk identitasnya saat ini.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/c/c9/COLLECTIE_TROPENMUSEUM_Bataks_huis_in_dorp_Lingga_Karo_hoogvlakte_TMnr_10011623.jpg";
             blocks = JSON.parse(JSON.stringify(sejarahBlocks));
-            blocks[1].content = historicalEvents[i];
+            // Fix: Check the type before accessing content property
+            if (blocks[1].type === 'heading') {
+              blocks[1].content = historicalEvents[i];
+            }
             break;
             
           case 'Budaya':
@@ -373,7 +382,10 @@ export const initializeSampleArticles = () => {
             summary = `Mendalami filosofi dan praktik ${culturalAspects[i]} yang masih dilestarikan hingga kini sebagai warisan budaya tak ternilai bagi masyarakat Karo.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/9/91/COLLECTIE_TROPENMUSEUM_Een_groep_Karo_Batakkers_met_muziekinstrumenten_waaronder_een_keteng-keteng_TMnr_10005035.jpg";
             blocks = JSON.parse(JSON.stringify(budayaBlocks));
-            blocks[1].content = culturalAspects[i];
+            // Fix: Check the type before accessing content property
+            if (blocks[1].type === 'heading') {
+              blocks[1].content = culturalAspects[i];
+            }
             break;
         }
         
@@ -381,7 +393,13 @@ export const initializeSampleArticles = () => {
         const article: Article = {
           id: crypto.randomUUID(),
           title,
-          content: blocks.filter(b => b.type === "paragraph").map(b => b.content).join("\n\n"),
+          content: blocks.filter(b => b.type === "paragraph").map(b => {
+            // Fix: Check if the block is a paragraph before accessing content property
+            if (b.type === 'paragraph') {
+              return b.content;
+            }
+            return '';
+          }).join("\n\n"),
           author: author.name,
           email: author.email,
           category,
