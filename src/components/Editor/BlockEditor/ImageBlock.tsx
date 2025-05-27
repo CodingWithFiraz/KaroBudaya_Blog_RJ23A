@@ -1,9 +1,8 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageBlock as ImageBlockType } from '@/types/blocks';
 import BlockControls from './BlockControls';
-import { Upload, X } from 'lucide-react';
-import { fileToDataURL } from '@/utils/articleUtils';
+import { Link, X, Image as ImageIcon } from 'lucide-react';
 
 interface ImageBlockProps {
   block: ImageBlockType;
@@ -26,7 +25,8 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
   onDelete,
   articleId
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [inputUrl, setInputUrl] = useState<string>('');
+  const [isValidUrl, setIsValidUrl] = useState<boolean>(true);
 
   // Store image in localStorage when it changes
   useEffect(() => {
@@ -55,20 +55,34 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [articleId, block.id, block.url, onChange]);
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const validateImageUrl = (url: string): boolean => {
     try {
-      const dataUrl = await fileToDataURL(file);
-      onChange(block.id, { url: dataUrl });
-    } catch (error) {
-      console.error('Error uploading image:', error);
+      new URL(url);
+      return /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url) || 
+             url.includes('unsplash.com') || 
+             url.includes('upload.wikimedia.org') ||
+             url.includes('images.') ||
+             url.includes('cdn.');
+    } catch {
+      return false;
     }
+  };
 
-    // Reset input value so the same file can be selected again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleUrlSubmit = () => {
+    if (inputUrl.trim()) {
+      if (validateImageUrl(inputUrl)) {
+        onChange(block.id, { url: inputUrl });
+        setInputUrl('');
+        setIsValidUrl(true);
+      } else {
+        setIsValidUrl(false);
+      }
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleUrlSubmit();
     }
   };
 
@@ -104,6 +118,7 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
               src={block.url}
               alt={block.alt || 'Uploaded image'}
               className="max-w-full max-h-[400px] object-contain mx-auto rounded"
+              onError={() => onChange(block.id, { url: '' })}
             />
             <div className="mt-2">
               <input
@@ -125,17 +140,35 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
             </div>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center h-32 cursor-pointer border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <Upload className="w-6 h-6 text-gray-400 mb-2" />
-            <span className="text-sm text-gray-500">Upload Image</span>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
+          <div className="flex flex-col items-center justify-center h-32">
+            <ImageIcon className="w-6 h-6 text-gray-400 mb-2" />
+            <span className="text-sm text-gray-500 mb-2">Masukkan URL Gambar</span>
+            <div className="w-full max-w-md">
+              <input
+                type="url"
+                value={inputUrl}
+                onChange={(e) => {
+                  setInputUrl(e.target.value);
+                  setIsValidUrl(true);
+                }}
+                onKeyPress={handleKeyPress}
+                placeholder="https://example.com/image.jpg"
+                className={`w-full px-3 py-2 border rounded-md text-sm ${
+                  !isValidUrl ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                }`}
+              />
+              {!isValidUrl && (
+                <p className="text-red-500 text-xs mt-1">URL gambar tidak valid</p>
+              )}
+              <button
+                type="button"
+                onClick={handleUrlSubmit}
+                className="w-full mt-2 px-3 py-1 bg-karo-gold text-white text-sm rounded-md hover:bg-opacity-90 transition-colors"
+              >
+                Tambah Gambar
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

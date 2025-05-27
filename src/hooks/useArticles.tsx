@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Article, ArticleFormData, Category, KulinerSubcategory } from '@/types/article';
 import { 
@@ -11,7 +10,6 @@ import {
   getArticleById,
   getArticlesByCategory,
   getArticlesBySubcategory,
-  fileToDataURL,
   initializeSampleArticles
 } from '@/utils/articleUtils';
 import { toast } from 'sonner';
@@ -80,16 +78,7 @@ export function useArticles() {
     try {
       setIsLoading(true);
       
-      // Handle the featured image
-      let featuredImageUrl = '';
-      if (data.featuredImage) {
-        featuredImageUrl = await fileToDataURL(data.featuredImage);
-      }
-      
-      const newArticle = saveArticle(
-        { ...data, featuredImageUrl },
-        isDraft
-      );
+      const newArticle = saveArticle(data, isDraft);
       
       fetchArticles();
       
@@ -109,17 +98,7 @@ export function useArticles() {
     try {
       setIsLoading(true);
       
-      // Handle the featured image
-      let featuredImageUrl = data.featuredImageUrl;
-      if (data.featuredImage) {
-        featuredImageUrl = await fileToDataURL(data.featuredImage);
-      }
-      
-      const updatedArticle = updateArticle(
-        id,
-        { ...data, featuredImageUrl },
-        isDraft
-      );
+      const updatedArticle = updateArticle(id, data, isDraft);
       
       fetchArticles();
       

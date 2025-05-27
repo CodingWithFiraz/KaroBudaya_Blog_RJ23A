@@ -1,4 +1,3 @@
-
 import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
 import { Block } from '@/types/blocks';
 
@@ -153,7 +152,7 @@ export const KULINER_SUBCATEGORIES: KulinerSubcategory[] = [
   'Minuman'
 ];
 
-// Sample data for articles
+// Sample data for articles with updated image URLs
 const destinasiBlocks: Block[] = [
   {
     id: "dest1-p1",

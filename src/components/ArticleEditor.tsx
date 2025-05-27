@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Article, ArticleFormData, Category, KulinerSubcategory, MapLocation } from '@/types/article';
@@ -140,27 +139,16 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     }
   };
 
-  const handleImageChange = (file: File | null) => {
+  const handleImageChange = (url: string) => {
     setFormData(prev => ({ 
       ...prev, 
-      featuredImage: file,
-      featuredImageUrl: file ? '' : prev.featuredImageUrl
+      featuredImage: null,
+      featuredImageUrl: url
     }));
     
-    if (file) {
-      // Convert to data URL and store in localStorage
-      const reader = new FileReader();
-      reader.onload = () => {
-        const dataUrl = reader.result as string;
-        if (dataUrl && articleId) {
-          localStorage.setItem(`article-featured-image-${articleId}`, dataUrl);
-          localStorage.setItem('article-sync-timestamp', Date.now().toString());
-          
-          // Also update formData
-          setFormData(prev => ({ ...prev, featuredImageUrl: dataUrl }));
-        }
-      };
-      reader.readAsDataURL(file);
+    if (url && articleId) {
+      localStorage.setItem(`article-featured-image-${articleId}`, url);
+      localStorage.setItem('article-sync-timestamp', Date.now().toString());
     } else if (articleId) {
       localStorage.removeItem(`article-featured-image-${articleId}`);
       localStorage.setItem('article-sync-timestamp', Date.now().toString());
@@ -223,8 +211,8 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
       return false;
     }
     
-    if (!formData.featuredImage && !formData.featuredImageUrl) {
-      toast.error('Gambar utama harus diupload');
+    if (!formData.featuredImageUrl) {
+      toast.error('URL gambar utama harus diisi');
       return false;
     }
     

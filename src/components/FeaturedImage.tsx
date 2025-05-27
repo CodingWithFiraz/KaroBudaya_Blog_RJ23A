@@ -1,24 +1,24 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Link, X, Image as ImageIcon } from 'lucide-react';
 
 interface FeaturedImageProps {
   imageUrl?: string;
-  onImageChange: (file: File | null) => void;
+  onImageChange: (url: string) => void;
   articleId?: string;
 }
 
 const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange, articleId }) => {
   const [preview, setPreview] = useState<string | undefined>(imageUrl);
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [inputUrl, setInputUrl] = useState<string>('');
+  const [isValidUrl, setIsValidUrl] = useState<boolean>(true);
 
   // Update preview when imageUrl prop changes
   useEffect(() => {
     setPreview(imageUrl);
   }, [imageUrl]);
 
-  // Save image to localStorage when it changes
+  // Save image URL to localStorage when it changes
   useEffect(() => {
     if (articleId && preview) {
       localStorage.setItem(`article-featured-image-${articleId}`, preview);
@@ -39,67 +39,44 @@ const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange, 
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [articleId]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    handleFile(file);
-  };
-
-  const handleFile = (file: File | null) => {
-    if (file) {
-      // Check if file is an image
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload an image file');
-        return;
-      }
-      
-      // Check file size (limit to 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Please upload an image smaller than 5MB');
-        return;
-      }
-      
-      // Update preview
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      
-      // Call parent callback
-      onImageChange(file);
-    } else {
-      setPreview(undefined);
-      onImageChange(null);
+  const validateImageUrl = (url: string): boolean => {
+    try {
+      new URL(url);
+      return /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url) || 
+             url.includes('unsplash.com') || 
+             url.includes('upload.wikimedia.org') ||
+             url.includes('images.') ||
+             url.includes('cdn.');
+    } catch {
+      return false;
     }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
+  const handleUrlSubmit = () => {
+    if (inputUrl.trim()) {
+      if (validateImageUrl(inputUrl)) {
+        setPreview(inputUrl);
+        onImageChange(inputUrl);
+        setInputUrl('');
+        setIsValidUrl(true);
+      } else {
+        setIsValidUrl(false);
+      }
+    }
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files[0] || null;
-    handleFile(file);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleUrlSubmit();
+    }
   };
 
   const removeImage = () => {
     setPreview(undefined);
-    onImageChange(null);
+    onImageChange('');
     
     if (articleId) {
       localStorage.removeItem(`article-featured-image-${articleId}`);
-    }
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
     }
   };
 
@@ -111,6 +88,10 @@ const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange, 
             src={preview} 
             alt="Featured" 
             className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+            onError={() => {
+              setPreview(undefined);
+              setIsValidUrl(false);
+            }}
           />
           <button
             type="button"
@@ -122,29 +103,34 @@ const FeaturedImage: React.FC<FeaturedImageProps> = ({ imageUrl, onImageChange, 
           </button>
         </div>
       ) : (
-        <div
-          className={`w-full h-64 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all ${
-            isDragging ? 'border-karo-gold bg-karo-gold/5' : 'border-karo-darkbeige hover:border-karo-gold hover:bg-karo-gold/5'
-          }`}
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
+        <div className="w-full h-64 border-2 border-dashed rounded-lg flex flex-col items-center justify-center border-karo-darkbeige">
           <ImageIcon size={48} className="text-karo-gold/70 mb-3" />
-          <p className="text-karo-brown font-medium mb-1">Unggah Gambar Utama</p>
-          <p className="text-karo-brown/70 text-sm mb-3">Seret file atau klik untuk memilih</p>
-          <div className="flex items-center text-sm text-karo-gold">
-            <Upload size={16} className="mr-1" />
-            <span>Pilih File</span>
+          <p className="text-karo-brown font-medium mb-1">Masukkan URL Gambar</p>
+          <div className="w-full max-w-md px-4">
+            <input
+              type="url"
+              value={inputUrl}
+              onChange={(e) => {
+                setInputUrl(e.target.value);
+                setIsValidUrl(true);
+              }}
+              onKeyPress={handleKeyPress}
+              placeholder="https://example.com/image.jpg"
+              className={`w-full px-3 py-2 border rounded-md text-sm ${
+                !isValidUrl ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            {!isValidUrl && (
+              <p className="text-red-500 text-xs mt-1">URL gambar tidak valid</p>
+            )}
+            <button
+              type="button"
+              onClick={handleUrlSubmit}
+              className="w-full mt-2 px-4 py-2 bg-karo-gold text-white rounded-md hover:bg-opacity-90 transition-colors"
+            >
+              Tambah Gambar
+            </button>
           </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
         </div>
       )}
     </div>
