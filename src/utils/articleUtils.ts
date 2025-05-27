@@ -46,7 +46,7 @@ export const saveArticle = (articleData: ArticleFormData, isDraft: boolean): Art
     email: articleData.email,
     category: articleData.category,
     subcategory: articleData.subcategory,
-    featuredImage: articleData.featuredImageUrl || '',
+    featuredImage: articleData.featuredImageUrl || '', // Use URL directly
     mapLocation: articleData.mapLocation,
     publishDate: isDraft ? undefined : now,
     isDraft,
@@ -85,7 +85,7 @@ export const updateArticle = (id: string, articleData: ArticleFormData, isDraft:
     email: articleData.email,
     category: articleData.category,
     subcategory: articleData.subcategory,
-    featuredImage: articleData.featuredImageUrl || existingArticle.featuredImage,
+    featuredImage: articleData.featuredImageUrl || existingArticle.featuredImage, // Use URL directly
     mapLocation: articleData.mapLocation,
     publishDate: isDraft ? existingArticle.publishDate : (existingArticle.publishDate || now),
     isDraft,
@@ -119,15 +119,7 @@ export const deleteArticle = (id: string): boolean => {
   return updatedArticles.length < articles.length;
 };
 
-// Convert file to data URL for storage
-export const fileToDataURL = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-};
+// Remove fileToDataURL function since we only use URLs now
 
 // Helper function to dispatch a storage event to notify other tabs/windows
 const dispatchStorageEvent = () => {
@@ -313,7 +305,6 @@ export const initializeSampleArticles = () => {
         const authorIndex = Math.floor(Math.random() * authors.length);
         const author = authors[authorIndex];
         const createdAt = getRandomDate();
-        const isEven = i % 2 === 0;
         
         let title = "";
         let summary = "";
@@ -332,7 +323,6 @@ export const initializeSampleArticles = () => {
             summary = `Eksplorasi wisata alam di ${destinations[i]}, salah satu destinasi paling menakjubkan di Tanah Karo dengan pemandangan yang memikat dan pengalaman budaya yang autentik.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Sibayak.JPG/1024px-Sibayak.JPG";
             blocks = JSON.parse(JSON.stringify(destinasiBlocks));
-            // Fix: Check the type before accessing content property
             if (blocks[1].type === 'heading') {
               blocks[1].content = `Keindahan ${destinations[i]}`;
             }
@@ -341,12 +331,10 @@ export const initializeSampleArticles = () => {
           case 'Kuliner Karo':
             const foods = ["Babi Panggang Karo", "Arsik", "Tasak Telu", "Cimpa", "Terites", 
                         "Cipera", "Pagit-pagit", "Lemang", "Gulai Ayam Karo", "Sup Gevro"];
-            const subcategory = i < 5 ? "Makanan" : "Minuman";
             title = `Mencicipi Kelezatan ${foods[i]} yang Menggugah Selera`;
             summary = `Mengulik rahasia di balik cita rasa ${foods[i]}, hidangan tradisional yang menjadi kebanggaan kuliner masyarakat Karo dengan rempah-rempah khas pegunungan.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/7/79/Babi_panggang_Karo.jpg";
             blocks = JSON.parse(JSON.stringify(kulinerBlocks));
-            // Fix: Check the type before accessing content property
             if (blocks[1].type === 'heading') {
               blocks[1].content = foods[i];
             }
@@ -364,7 +352,6 @@ export const initializeSampleArticles = () => {
             summary = `Menelusuri jejak sejarah tentang ${historicalEvents[i]} yang menjadi bagian penting dari perjalanan masyarakat Karo dalam membentuk identitasnya saat ini.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/c/c9/COLLECTIE_TROPENMUSEUM_Bataks_huis_in_dorp_Lingga_Karo_hoogvlakte_TMnr_10011623.jpg";
             blocks = JSON.parse(JSON.stringify(sejarahBlocks));
-            // Fix: Check the type before accessing content property
             if (blocks[1].type === 'heading') {
               blocks[1].content = historicalEvents[i];
             }
@@ -381,7 +368,6 @@ export const initializeSampleArticles = () => {
             summary = `Mendalami filosofi dan praktik ${culturalAspects[i]} yang masih dilestarikan hingga kini sebagai warisan budaya tak ternilai bagi masyarakat Karo.`;
             featuredImage = "https://upload.wikimedia.org/wikipedia/commons/9/91/COLLECTIE_TROPENMUSEUM_Een_groep_Karo_Batakkers_met_muziekinstrumenten_waaronder_een_keteng-keteng_TMnr_10005035.jpg";
             blocks = JSON.parse(JSON.stringify(budayaBlocks));
-            // Fix: Check the type before accessing content property
             if (blocks[1].type === 'heading') {
               blocks[1].content = culturalAspects[i];
             }
@@ -393,7 +379,6 @@ export const initializeSampleArticles = () => {
           id: crypto.randomUUID(),
           title,
           content: blocks.filter(b => b.type === "paragraph").map(b => {
-            // Fix: Check if the block is a paragraph before accessing content property
             if (b.type === 'paragraph') {
               return b.content;
             }

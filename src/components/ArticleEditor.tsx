@@ -28,7 +28,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     email: '',
     category: CATEGORIES[0],
     subcategory: undefined,
-    featuredImage: null,
     featuredImageUrl: '',
     mapLocation: undefined,
     summary: '',
@@ -49,7 +48,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
         email: article.email,
         category: article.category,
         subcategory: article.subcategory,
-        featuredImageUrl: article.featuredImage,
+        featuredImageUrl: article.featuredImage, // Use featuredImage as URL
         mapLocation: article.mapLocation,
         summary: article.summary || '',
       });
@@ -142,7 +141,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
   const handleImageChange = (url: string) => {
     setFormData(prev => ({ 
       ...prev, 
-      featuredImage: null,
       featuredImageUrl: url
     }));
     

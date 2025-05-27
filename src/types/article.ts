@@ -24,7 +24,7 @@ export interface Article {
   email: string;
   category: Category;
   subcategory?: KulinerSubcategory;
-  featuredImage: string;
+  featuredImage: string; // Changed to string only
   mapLocation?: MapLocation;
   publishDate?: string;
   isDraft: boolean;
@@ -43,8 +43,7 @@ export interface ArticleFormData {
   email: string;
   category: Category;
   subcategory?: KulinerSubcategory;
-  featuredImage?: File | null;
-  featuredImageUrl?: string;
+  featuredImageUrl?: string; // Keep only URL field
   mapLocation?: MapLocation;
   summary?: string;
   blocks?: Block[];
