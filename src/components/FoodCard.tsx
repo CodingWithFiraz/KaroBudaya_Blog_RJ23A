@@ -29,11 +29,20 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
   // Random like count for demo purposes
   const likeCount = Math.floor(Math.random() * 50) + 1;
   
+  // Get valid image URL or fallback to food-related Unsplash image
+  const getImageUrl = () => {
+    if (food.featuredImage && food.featuredImage.startsWith('http')) {
+      return food.featuredImage;
+    }
+    // Fallback to food-related images from Unsplash
+    return 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80';
+  };
+  
   return (
     <div className="bg-white dark:bg-karo-darkcard rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
       <Link to={`/article/${food.id}/${slug}`} className="block relative h-48 overflow-hidden">
         <img 
-          src={food.featuredImage || '/placeholder.svg'} 
+          src={getImageUrl()} 
           alt={food.title}
           className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
         />

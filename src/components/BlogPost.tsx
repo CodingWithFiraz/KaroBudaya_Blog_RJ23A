@@ -42,13 +42,33 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
     return article.content.substring(0, 150) + '...';
   };
 
+  // Get valid image URL or fallback to public Unsplash image
+  const getImageUrl = () => {
+    if (article.featuredImage && article.featuredImage.startsWith('http')) {
+      return article.featuredImage;
+    }
+    // Fallback to category-appropriate images from Unsplash
+    switch (article.category) {
+      case 'Kuliner Karo':
+        return 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80';
+      case 'Budaya':
+        return 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80';
+      case 'Sejarah':
+        return 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80';
+      case 'Destinasi & Tempat':
+        return 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80';
+      default:
+        return 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80';
+    }
+  };
+
   if (variant === 'featured') {
     return (
       <div className="relative h-[500px] overflow-hidden rounded-xl group">
         {/* Background image with overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
         <img 
-          src={article.featuredImage || '/placeholder.svg'} 
+          src={getImageUrl()} 
           alt={article.title}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -112,7 +132,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
           className="md:w-1/3 h-48 overflow-hidden rounded-lg"
         >
           <img 
-            src={article.featuredImage || '/placeholder.svg'} 
+            src={getImageUrl()} 
             alt={article.title}
             className="w-full h-full object-cover transition-transform hover:scale-105"
           />
@@ -181,7 +201,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ article, variant = 'card' }) => {
         className="h-48 overflow-hidden"
       >
         <img 
-          src={article.featuredImage || '/placeholder.svg'} 
+          src={getImageUrl()} 
           alt={article.title}
           className="w-full h-full object-cover transition-transform hover:scale-105"
         />

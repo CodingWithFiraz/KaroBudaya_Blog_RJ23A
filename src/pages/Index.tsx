@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -9,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 const Index: React.FC = () => {
   const {
     publishedArticles,
@@ -71,6 +73,10 @@ const Index: React.FC = () => {
   const getInitials = (name: string) => {
     return name.split(' ').map(part => part[0]).join('').toUpperCase().substring(0, 2);
   };
+
+  // Public URL for Uis Karo image that's accessible from all devices
+  const uisKaroImageUrl = "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80";
+  
   return <div className="min-h-screen flex flex-col">
       <Header />
       
@@ -90,7 +96,7 @@ const Index: React.FC = () => {
             
             <div className="space-y-4 mt-6">
               {destinationArticles.length > 0 ? destinationArticles.map(article => <Link key={article.id} to={`/article/${article.id}/${article.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`} className="flex items-start gap-3 hover:bg-karo-darkbeige/20 p-2 rounded-md transition-colors">
-                    <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-16 h-16 object-cover rounded" />
+                    <img src={article.featuredImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80'} alt={article.title} className="w-16 h-16 object-cover rounded" />
                     <div>
                       <p className="text-xs text-karo-brown/80 mb-1">Tempat</p>
                       <h3 className="text-sm font-medium line-clamp-2">{article.title}</h3>
@@ -104,7 +110,7 @@ const Index: React.FC = () => {
           {/* Featured main article */}
           <div className="lg:col-span-9">
             {featuredArticle ? <div className="relative h-[500px] overflow-hidden rounded-xl group">
-                <img src={featuredArticle.featuredImage || '/placeholder.svg'} alt={featuredArticle.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <img src={featuredArticle.featuredImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'} alt={featuredArticle.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
                 
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
@@ -172,7 +178,7 @@ const Index: React.FC = () => {
                   </Link>
                   
                   <div className="relative h-[400px] overflow-hidden rounded-none">
-                    <img src="/lovable-uploads/631de586-6f83-4c92-8acc-931cc8034976.png" alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
+                    <img src={uisKaroImageUrl} alt="Uis Karo" className="absolute inset-0 w-full h-full object-cover" />
                     
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70">
                       <div className="inline-block px-2 py-1 bg-karo-cream dark:bg-gray-700 text-sm font-medium rounded-sm mb-2 text-inherit">
@@ -231,7 +237,7 @@ const Index: React.FC = () => {
                 
                 <CardContent className="p-0">
                   {getArticlesByCategory(category.slug).length > 0 ? getArticlesByCategory(category.slug).map(article => <Link key={article.id} to={`/article/${article.id}/${article.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`} className="flex items-start gap-4 p-4 hover:bg-karo-darkbeige dark:hover:bg-gray-400  transition-colors border-b last:border-b-0">
-                        <img src={article.featuredImage || '/placeholder.svg'} alt={article.title} className="w-20 h-20 object-cover rounded" />
+                        <img src={article.featuredImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80'} alt={article.title} className="w-20 h-20 object-cover rounded" />
                         <div>
                           <h4 className="font-medium line-clamp-2 hover:text-karo-gold transition-colors">
                             {article.title}
