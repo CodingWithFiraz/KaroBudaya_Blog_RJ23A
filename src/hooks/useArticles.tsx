@@ -1,21 +1,17 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Article, ArticleFormData, Category, KulinerSubcategory } from '@/types/article';
 import { 
-  getAllArticles, 
-  getPublishedArticles, 
-  getDraftArticles, 
-  saveArticle,
-  updateArticle,
-  deleteArticle,
-  getArticleById,
-  getArticlesByCategory,
-  getArticlesBySubcategory,
-  initializeSampleArticles
-} from '@/utils/articleUtils';
+  getAllArticlesFromSupabase,
+  getPublishedArticlesFromSupabase, 
+  getDraftArticlesFromSupabase, 
+  saveArticleToSupabase,
+  updateArticleInSupabase,
+  deleteArticleFromSupabase,
+  getArticleByIdFromSupabase
+} from '@/utils/supabaseArticles';
 import { toast } from 'sonner';
-
-// Set this to true to listen for storage events from other tabs/windows
-const ENABLE_REALTIME = true;
+import { supabase } from '@/integrations/supabase/client';
 
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -23,13 +19,15 @@ export function useArticles() {
   const [draftArticles, setDraftArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch all articles
-  const fetchArticles = useCallback(() => {
+  // Fetch all articles from Supabase
+  const fetchArticles = useCallback(async () => {
     setIsLoading(true);
     try {
-      const allArticles = getAllArticles();
-      const published = getPublishedArticles();
-      const drafts = getDraftArticles();
+      const [allArticles, published, drafts] = await Promise.all([
+        getAllArticlesFromSupabase(),
+        getPublishedArticlesFromSupabase(),
+        getDraftArticlesFromSupabase()
+      ]);
       
       setArticles(allArticles);
       setPublishedArticles(published);
@@ -42,35 +40,29 @@ export function useArticles() {
     }
   }, []);
 
-  // Initialize sample articles if needed
-  useEffect(() => {
-    const articlesExist = getAllArticles().length > 0;
-    if (!articlesExist) {
-      initializeSampleArticles();
-      fetchArticles();
-    }
-  }, [fetchArticles]);
-
-  // Listen for storage events from other tabs/windows for real-time updates
-  useEffect(() => {
-    if (ENABLE_REALTIME) {
-      const handleStorageChange = (event: StorageEvent) => {
-        if (event.key === 'karo-blog-articles') {
-          fetchArticles();
-          toast.info('Article content updated', {
-            description: 'New changes from another device were loaded'
-          });
-        }
-      };
-      
-      window.addEventListener('storage', handleStorageChange);
-      return () => window.removeEventListener('storage', handleStorageChange);
-    }
-  }, [fetchArticles]);
-
-  // Initial fetch
+  // Set up real-time subscription
   useEffect(() => {
     fetchArticles();
+
+    // Subscribe to real-time changes
+    const channel = supabase
+      .channel('articles-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'articles'
+        },
+        () => {
+          fetchArticles();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [fetchArticles]);
 
   // Create a new article
@@ -78,9 +70,7 @@ export function useArticles() {
     try {
       setIsLoading(true);
       
-      const newArticle = saveArticle(data, isDraft);
-      
-      fetchArticles();
+      const newArticle = await saveArticleToSupabase(data, isDraft);
       
       toast.success(isDraft ? 'Article saved to drafts' : 'Article published successfully');
       return newArticle;
@@ -98,9 +88,7 @@ export function useArticles() {
     try {
       setIsLoading(true);
       
-      const updatedArticle = updateArticle(id, data, isDraft);
-      
-      fetchArticles();
+      const updatedArticle = await updateArticleInSupabase(id, data, isDraft);
       
       toast.success(isDraft ? 'Draft updated successfully' : 'Article updated and published');
       return updatedArticle;
@@ -117,10 +105,9 @@ export function useArticles() {
   const removeArticle = async (id: string) => {
     try {
       setIsLoading(true);
-      const success = deleteArticle(id);
+      const success = await deleteArticleFromSupabase(id);
       
       if (success) {
-        fetchArticles();
         toast.success('Article deleted successfully');
         return true;
       } else {
@@ -137,18 +124,26 @@ export function useArticles() {
   };
 
   // Get a specific article
-  const getArticle = (id: string): Article | undefined => {
-    return getArticleById(id);
+  const getArticle = async (id: string): Promise<Article | undefined> => {
+    try {
+      const article = await getArticleByIdFromSupabase(id);
+      return article || undefined;
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      return undefined;
+    }
   };
 
   // Get articles by category
   const getByCategory = (category: Category): Article[] => {
-    return getArticlesByCategory(category);
+    return publishedArticles.filter(article => article.category === category);
   };
 
   // Get articles by subcategory (for Kuliner)
   const getBySubcategory = (category: Category, subcategory: KulinerSubcategory): Article[] => {
-    return getArticlesBySubcategory(category, subcategory);
+    return publishedArticles.filter(
+      article => article.category === category && article.subcategory === subcategory
+    );
   };
 
   return {

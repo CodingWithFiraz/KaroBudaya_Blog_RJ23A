@@ -1,8 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ImageBlock as ImageBlockType } from '@/types/blocks';
 import BlockControls from './BlockControls';
-import { Link, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, Link, X, Image as ImageIcon } from 'lucide-react';
+import { uploadImageToSupabase } from '@/utils/supabaseArticles';
+import { toast } from 'sonner';
 
 interface ImageBlockProps {
   block: ImageBlockType;
@@ -27,33 +29,8 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
 }) => {
   const [inputUrl, setInputUrl] = useState<string>('');
   const [isValidUrl, setIsValidUrl] = useState<boolean>(true);
-
-  // Store image in localStorage when it changes
-  useEffect(() => {
-    if (articleId && block.url) {
-      const imageKey = `article-block-image-${articleId}-${block.id}`;
-      localStorage.setItem(imageKey, block.url);
-      
-      // Trigger sync event
-      localStorage.setItem('article-sync-timestamp', Date.now().toString());
-    }
-  }, [block.url, block.id, articleId]);
-
-  // Listen for storage events from other tabs/windows
-  useEffect(() => {
-    if (!articleId) return;
-    
-    const imageKey = `article-block-image-${articleId}-${block.id}`;
-    
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === imageKey && event.newValue && event.newValue !== block.url) {
-        onChange(block.id, { url: event.newValue });
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [articleId, block.id, block.url, onChange]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateImageUrl = (url: string): boolean => {
     try {
@@ -62,9 +39,32 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
              url.includes('unsplash.com') || 
              url.includes('upload.wikimedia.org') ||
              url.includes('images.') ||
-             url.includes('cdn.');
+             url.includes('cdn.') ||
+             url.includes('supabase');
     } catch {
       return false;
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const imageUrl = await uploadImageToSupabase(file);
+      onChange(block.id, { url: imageUrl });
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -88,15 +88,18 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
 
   const handleRemoveImage = () => {
     onChange(block.id, { url: '' });
-    
-    // Also remove from localStorage if articleId is provided
-    if (articleId) {
-      localStorage.removeItem(`article-block-image-${articleId}-${block.id}`);
-    }
   };
 
   return (
     <div className="block-item group relative mb-4">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      
       <BlockControls
         index={index}
         totalBlocks={totalBlocks}
@@ -142,7 +145,30 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-32">
             <ImageIcon className="w-6 h-6 text-gray-400 mb-2" />
-            <span className="text-sm text-gray-500 mb-2">Masukkan URL Gambar</span>
+            <span className="text-sm text-gray-500 mb-2">Upload atau Masukkan URL Gambar</span>
+            
+            {/* File Upload Button */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="mb-2 px-3 py-1 bg-karo-gold text-white text-sm rounded-md hover:bg-opacity-90 transition-colors disabled:opacity-50"
+            >
+              {isUploading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
+                  Uploading...
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <Upload size={14} className="mr-1" />
+                  Upload File
+                </div>
+              )}
+            </button>
+            
+            <div className="text-xs text-gray-400 mb-2">atau</div>
+            
             <div className="w-full max-w-md">
               <input
                 type="url"
@@ -165,7 +191,10 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
                 onClick={handleUrlSubmit}
                 className="w-full mt-2 px-3 py-1 bg-karo-gold text-white text-sm rounded-md hover:bg-opacity-90 transition-colors"
               >
-                Tambah Gambar
+                <div className="flex items-center justify-center">
+                  <Link size={14} className="mr-1" />
+                  Tambah dari URL
+                </div>
               </button>
             </div>
           </div>

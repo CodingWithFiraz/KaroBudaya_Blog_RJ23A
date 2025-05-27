@@ -9,7 +9,101 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      article_images: {
+        Row: {
+          alt_text: string | null
+          article_id: string | null
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+        }
+        Insert: {
+          alt_text?: string | null
+          article_id?: string | null
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+        }
+        Update: {
+          alt_text?: string | null
+          article_id?: string | null
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_images_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      articles: {
+        Row: {
+          author: string
+          blocks: Json | null
+          category: string
+          content: string
+          created_at: string
+          email: string
+          featured_image_url: string | null
+          id: string
+          is_draft: boolean
+          likes: number | null
+          map_location: Json | null
+          publish_date: string | null
+          subcategory: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          views: number | null
+        }
+        Insert: {
+          author: string
+          blocks?: Json | null
+          category: string
+          content: string
+          created_at?: string
+          email: string
+          featured_image_url?: string | null
+          id?: string
+          is_draft?: boolean
+          likes?: number | null
+          map_location?: Json | null
+          publish_date?: string | null
+          subcategory?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+          views?: number | null
+        }
+        Update: {
+          author?: string
+          blocks?: Json | null
+          category?: string
+          content?: string
+          created_at?: string
+          email?: string
+          featured_image_url?: string | null
+          id?: string
+          is_draft?: boolean
+          likes?: number | null
+          map_location?: Json | null
+          publish_date?: string | null
+          subcategory?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          views?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

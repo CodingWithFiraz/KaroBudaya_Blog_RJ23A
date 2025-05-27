@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Block, BlockType, ParagraphBlock, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 import ParagraphBlockComponent from './ParagraphBlock';
@@ -41,23 +40,6 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
   useEffect(() => {
     onChange(blocks);
   }, [blocks, onChange]);
-
-  // Load blocks from localStorage if available
-  useEffect(() => {
-    if (articleId) {
-      const savedBlocks = localStorage.getItem(`article-blocks-${articleId}`);
-      if (savedBlocks) {
-        try {
-          const parsedBlocks = JSON.parse(savedBlocks);
-          if (parsedBlocks.length > 0) {
-            setBlocks(parsedBlocks);
-          }
-        } catch (error) {
-          console.error('Error parsing saved blocks:', error);
-        }
-      }
-    }
-  }, [articleId]);
 
   const createBlock = (type: BlockType, content: string = ''): Block => {
     const id = Math.random().toString(36).substring(2, 9);
