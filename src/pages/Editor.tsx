@@ -1,26 +1,43 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
 import Layout from '@/components/Layout/MainLayout';
 import ArticleEditor from '@/components/ArticleEditor';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { Article } from '@/types/article';
 
 const Editor: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getArticle } = useArticles();
+  const { getArticleById } = useArticles();
+  const [article, setArticle] = useState<Article | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // If id is provided, we're editing an existing article
-  const article = id ? getArticle(id) : undefined;
+  useEffect(() => {
+    const fetchArticle = async () => {
+      if (id) {
+        try {
+          const fetchedArticle = await getArticleById(id);
+          setArticle(fetchedArticle);
+        } catch (error) {
+          console.error('Error fetching article:', error);
+          toast.error('Failed to load article');
+        }
+      }
+      setIsLoading(false);
+    };
+
+    fetchArticle();
+  }, [id, getArticleById]);
   
   const handleGoBack = () => {
     navigate(-1);
   };
 
   // Show a notification about real-time editing
-  React.useEffect(() => {
+  useEffect(() => {
     toast.info(
       "Fitur edit real-time aktif",
       { 
@@ -29,6 +46,18 @@ const Editor: React.FC = () => {
       }
     );
   }, []);
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8 pt-24">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-karo-gold"></div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

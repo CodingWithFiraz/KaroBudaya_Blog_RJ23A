@@ -123,8 +123,13 @@ export function useArticles() {
     }
   };
 
-  // Get a specific article
-  const getArticle = async (id: string): Promise<Article | undefined> => {
+  // Get a specific article - now returns the article directly, not a promise
+  const getArticle = (id: string): Article | undefined => {
+    return articles.find(article => article.id === id);
+  };
+
+  // Get a specific article by ID (async version for when we need fresh data)
+  const getArticleById = async (id: string): Promise<Article | undefined> => {
     try {
       const article = await getArticleByIdFromSupabase(id);
       return article || undefined;
@@ -155,6 +160,7 @@ export function useArticles() {
     editArticle,
     removeArticle,
     getArticle,
+    getArticleById,
     getByCategory,
     getBySubcategory,
     fetchArticles

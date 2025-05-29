@@ -10,26 +10,58 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TextToSpeech from '@/components/TextToSpeech';
 import { Block, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
+import { Article } from '@/types/article';
 
 const ArticleView: React.FC = () => {
   const { id } = useParams<{ id: string; }>();
   const navigate = useNavigate();
-  const { getArticle, removeArticle } = useArticles();
+  const { getArticleById, removeArticle } = useArticles();
+  const [article, setArticle] = useState<Article | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [textSize, setTextSize] = useState<'small' | 'medium' | 'large'>('medium');
   
-  if (!id) {
-    navigate('/');
-    return null;
-  }
-  
-  const article = getArticle(id);
-  
   useEffect(() => {
-    if (!article) {
-      toast.error('Artikel tidak ditemukan');
-      navigate('/');
-    }
-  }, [article, navigate]);
+    const fetchArticle = async () => {
+      if (!id) {
+        navigate('/');
+        return;
+      }
+
+      try {
+        const fetchedArticle = await getArticleById(id);
+        if (fetchedArticle) {
+          setArticle(fetchedArticle);
+        } else {
+          toast.error('Artikel tidak ditemukan');
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        toast.error('Gagal memuat artikel');
+        navigate('/');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArticle();
+  }, [id, getArticleById, navigate]);
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
+        <Header />
+        <main className="flex-grow pt-24 px-[32px]">
+          <div className="container mx-auto">
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-karo-gold"></div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   
   if (!article) {
     return null;
@@ -48,7 +80,7 @@ const ArticleView: React.FC = () => {
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
       try {
-        await removeArticle(id);
+        await removeArticle(id!);
         navigate('/');
       } catch (error) {
         console.error('Error deleting article:', error);

@@ -1,6 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Article, ArticleFormData } from '@/types/article';
+import { Article, ArticleFormData, MapLocation } from '@/types/article';
+import { Block } from '@/types/blocks';
 
 export const uploadImageToSupabase = async (file: File): Promise<string> => {
   const fileExt = file.name.split('.').pop();
@@ -20,6 +21,17 @@ export const uploadImageToSupabase = async (file: File): Promise<string> => {
     .getPublicUrl(filePath);
 
   return data.publicUrl;
+};
+
+// Helper function to safely parse JSON data
+const safeJsonParse = <T>(jsonData: any, fallback: T): T => {
+  if (!jsonData) return fallback;
+  if (typeof jsonData === 'object') return jsonData as T;
+  try {
+    return JSON.parse(jsonData) as T;
+  } catch {
+    return fallback;
+  }
 };
 
 export const getAllArticlesFromSupabase = async (): Promise<Article[]> => {
@@ -43,14 +55,14 @@ export const getAllArticlesFromSupabase = async (): Promise<Article[]> => {
     category: article.category as any,
     subcategory: article.subcategory as any,
     featuredImage: article.featured_image_url || '',
-    mapLocation: article.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(article.map_location, undefined),
     publishDate: article.publish_date,
     isDraft: article.is_draft,
     createdAt: article.created_at,
     updatedAt: article.updated_at,
     views: article.views || 0,
     likes: article.likes || 0,
-    blocks: article.blocks
+    blocks: safeJsonParse<Block[]>(article.blocks, [])
   }));
 };
 
@@ -76,14 +88,14 @@ export const getPublishedArticlesFromSupabase = async (): Promise<Article[]> => 
     category: article.category as any,
     subcategory: article.subcategory as any,
     featuredImage: article.featured_image_url || '',
-    mapLocation: article.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(article.map_location, undefined),
     publishDate: article.publish_date,
     isDraft: article.is_draft,
     createdAt: article.created_at,
     updatedAt: article.updated_at,
     views: article.views || 0,
     likes: article.likes || 0,
-    blocks: article.blocks
+    blocks: safeJsonParse<Block[]>(article.blocks, [])
   }));
 };
 
@@ -109,14 +121,14 @@ export const getDraftArticlesFromSupabase = async (): Promise<Article[]> => {
     category: article.category as any,
     subcategory: article.subcategory as any,
     featuredImage: article.featured_image_url || '',
-    mapLocation: article.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(article.map_location, undefined),
     publishDate: article.publish_date,
     isDraft: article.is_draft,
     createdAt: article.created_at,
     updatedAt: article.updated_at,
     views: article.views || 0,
     likes: article.likes || 0,
-    blocks: article.blocks
+    blocks: safeJsonParse<Block[]>(article.blocks, [])
   }));
 };
 
@@ -132,10 +144,10 @@ export const saveArticleToSupabase = async (articleData: ArticleFormData, isDraf
       category: articleData.category,
       subcategory: articleData.subcategory,
       featured_image_url: articleData.featuredImageUrl,
-      map_location: articleData.mapLocation,
+      map_location: articleData.mapLocation ? JSON.stringify(articleData.mapLocation) : null,
       publish_date: isDraft ? null : new Date().toISOString(),
       is_draft: isDraft,
-      blocks: articleData.blocks
+      blocks: articleData.blocks ? JSON.stringify(articleData.blocks) : null
     })
     .select()
     .single();
@@ -154,14 +166,14 @@ export const saveArticleToSupabase = async (articleData: ArticleFormData, isDraf
     category: data.category as any,
     subcategory: data.subcategory as any,
     featuredImage: data.featured_image_url || '',
-    mapLocation: data.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(data.map_location, undefined),
     publishDate: data.publish_date,
     isDraft: data.is_draft,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     views: data.views || 0,
     likes: data.likes || 0,
-    blocks: data.blocks
+    blocks: safeJsonParse<Block[]>(data.blocks, [])
   };
 };
 
@@ -177,10 +189,10 @@ export const updateArticleInSupabase = async (id: string, articleData: ArticleFo
       category: articleData.category,
       subcategory: articleData.subcategory,
       featured_image_url: articleData.featuredImageUrl,
-      map_location: articleData.mapLocation,
+      map_location: articleData.mapLocation ? JSON.stringify(articleData.mapLocation) : null,
       publish_date: isDraft ? null : new Date().toISOString(),
       is_draft: isDraft,
-      blocks: articleData.blocks,
+      blocks: articleData.blocks ? JSON.stringify(articleData.blocks) : null,
       updated_at: new Date().toISOString()
     })
     .eq('id', id)
@@ -201,14 +213,14 @@ export const updateArticleInSupabase = async (id: string, articleData: ArticleFo
     category: data.category as any,
     subcategory: data.subcategory as any,
     featuredImage: data.featured_image_url || '',
-    mapLocation: data.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(data.map_location, undefined),
     publishDate: data.publish_date,
     isDraft: data.is_draft,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     views: data.views || 0,
     likes: data.likes || 0,
-    blocks: data.blocks
+    blocks: safeJsonParse<Block[]>(data.blocks, [])
   };
 };
 
@@ -248,13 +260,13 @@ export const getArticleByIdFromSupabase = async (id: string): Promise<Article | 
     category: data.category as any,
     subcategory: data.subcategory as any,
     featuredImage: data.featured_image_url || '',
-    mapLocation: data.map_location,
+    mapLocation: safeJsonParse<MapLocation | undefined>(data.map_location, undefined),
     publishDate: data.publish_date,
     isDraft: data.is_draft,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
     views: data.views || 0,
     likes: data.likes || 0,
-    blocks: data.blocks
+    blocks: safeJsonParse<Block[]>(data.blocks, [])
   };
 };
