@@ -4,7 +4,7 @@ import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { useArticles } from '@/hooks/useArticles';
-import ArticleCard from '@/components/ArticleCard';
+import BlogPost from '@/components/BlogPost';
 import { Category } from '@/types/article';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -144,7 +144,7 @@ const Index: React.FC = () => {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {latestArticles.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
+                    <BlogPost key={article.id} article={article} />
                   ))}
                 </div>
                 
