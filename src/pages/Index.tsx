@@ -9,55 +9,48 @@ import { Category } from '@/types/article';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ArticleGenerator from '@/components/ArticleGenerator';
-
 const Index: React.FC = () => {
-  const { publishedArticles, isLoading } = useArticles();
+  const {
+    publishedArticles,
+    isLoading
+  } = useArticles();
   const [latestArticles, setLatestArticles] = useState(publishedArticles.slice(0, 6));
-
   useEffect(() => {
     if (!isLoading) {
       setLatestArticles(publishedArticles.slice(0, 6));
     }
   }, [publishedArticles, isLoading]);
-
-  const categories: { title: Category; description: string; image: string }[] = [
-    {
-      title: 'Destinasi & Tempat',
-      description: 'Jelajahi keindahan alam dan tempat wisata menarik di Tanah Karo',
-      image: '/images/categories/destination.jpg'
-    },
-    {
-      title: 'Kuliner Karo',
-      description: 'Nikmati kelezatan masakan tradisional dan kuliner khas Karo',
-      image: '/images/categories/culinary.jpg'
-    },
-    {
-      title: 'Sejarah',
-      description: 'Telusuri jejak sejarah dan perkembangan masyarakat Karo dari masa ke masa',
-      image: '/images/categories/history.jpg'
-    },
-    {
-      title: 'Budaya',
-      description: 'Pelajari kekayaan budaya, adat istiadat, dan tradisi masyarakat Karo',
-      image: '/images/categories/culture.jpg'
-    }
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
+  const categories: {
+    title: Category;
+    description: string;
+    image: string;
+  }[] = [{
+    title: 'Destinasi & Tempat',
+    description: 'Jelajahi keindahan alam dan tempat wisata menarik di Tanah Karo',
+    image: '/images/categories/destination.jpg'
+  }, {
+    title: 'Kuliner Karo',
+    description: 'Nikmati kelezatan masakan tradisional dan kuliner khas Karo',
+    image: '/images/categories/culinary.jpg'
+  }, {
+    title: 'Sejarah',
+    description: 'Telusuri jejak sejarah dan perkembangan masyarakat Karo dari masa ke masa',
+    image: '/images/categories/history.jpg'
+  }, {
+    title: 'Budaya',
+    description: 'Pelajari kekayaan budaya, adat istiadat, dan tradisi masyarakat Karo',
+    image: '/images/categories/culture.jpg'
+  }];
+  return <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative h-[500px] flex items-center justify-center text-white overflow-hidden">
-          <div className="absolute inset-0 bg-black/50 z-10"></div>
-          <img 
-            src="/images/hero-bg.jpg" 
-            alt="Tanah Karo" 
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="container mx-auto px-[32px] relative z-20">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4">
+          <div className="absolute inset-0 bg-black/50 z-10 py-0 my-0"></div>
+          <img src="/images/hero-bg.jpg" alt="Tanah Karo" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="container mx-auto px-[32px] relative z-20 py-0 ">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 mt-24">
               Jelajahi Keindahan <span className="text-karo-gold">Tanah Karo</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl">
@@ -75,13 +68,7 @@ const Index: React.FC = () => {
         </section>
         
         {/* Article Generator Section */}
-        <section className="py-16 px-[32px] bg-gray-50 dark:bg-gray-900">
-          <div className="container mx-auto">
-            <div className="max-w-md mx-auto">
-              <ArticleGenerator />
-            </div>
-          </div>
-        </section>
+        
 
         {/* Categories Section */}
         <section className="py-16 px-[32px]">
@@ -90,19 +77,10 @@ const Index: React.FC = () => {
             <p className="text-karo-brown dark:text-gray-400 mb-8">Pilih kategori yang ingin kamu jelajahi</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories.map((category, index) => (
-                <Link 
-                  key={index}
-                  to={`/category/${category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="group"
-                >
+              {categories.map((category, index) => <Link key={index} to={`/category/${category.title.toLowerCase().replace(/\s+/g, '-')}`} className="group">
                   <div className="bg-white dark:bg-karo-darkcard rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
                     <div className="h-48 overflow-hidden">
-                      <img 
-                        src={category.image} 
-                        alt={category.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                      <img src={category.image} alt={category.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                     <div className="p-6">
                       <h3 className="text-xl font-bold mb-2 dark:text-white">{category.title}</h3>
@@ -113,8 +91,7 @@ const Index: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                </Link>)}
             </div>
           </div>
         </section>
@@ -127,38 +104,26 @@ const Index: React.FC = () => {
                 <h2 className="text-3xl font-serif font-bold mb-2 dark:text-white">Artikel Terbaru</h2>
                 <p className="text-karo-brown dark:text-gray-400">Temukan informasi menarik tentang Tanah Karo</p>
               </div>
-              <Link 
-                to="/articles" 
-                className="hidden md:flex items-center text-karo-gold dark:text-karo-darkgold hover:underline"
-              >
+              <Link to="/articles" className="hidden md:flex items-center text-karo-gold dark:text-karo-darkgold hover:underline">
                 <span>Lihat Semua</span>
                 <ArrowRight size={16} className="ml-2" />
               </Link>
             </div>
             
-            {isLoading ? (
-              <div className="flex items-center justify-center h-64">
+            {isLoading ? <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-karo-gold"></div>
-              </div>
-            ) : (
-              <>
+              </div> : <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {latestArticles.map((article) => (
-                    <BlogPost key={article.id} article={article} />
-                  ))}
+                  {latestArticles.map(article => <BlogPost key={article.id} article={article} />)}
                 </div>
                 
                 <div className="mt-8 text-center md:hidden">
-                  <Link 
-                    to="/articles" 
-                    className="inline-flex items-center text-karo-gold dark:text-karo-darkgold hover:underline"
-                  >
+                  <Link to="/articles" className="inline-flex items-center text-karo-gold dark:text-karo-darkgold hover:underline">
                     <span>Lihat Semua Artikel</span>
                     <ArrowRight size={16} className="ml-2" />
                   </Link>
                 </div>
-              </>
-            )}
+              </>}
           </div>
         </section>
 
@@ -175,11 +140,7 @@ const Index: React.FC = () => {
                 </div>
                 <div className="md:w-1/3 w-full">
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Input 
-                      type="email" 
-                      placeholder="Email kamu" 
-                      className="flex-grow"
-                    />
+                    <Input type="email" placeholder="Email kamu" className="flex-grow" />
                     <Button className="bg-karo-gold hover:bg-karo-darkgold text-white">
                       Langganan
                     </Button>
@@ -192,8 +153,6 @@ const Index: React.FC = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
