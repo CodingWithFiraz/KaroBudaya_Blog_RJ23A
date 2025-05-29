@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { Block, BlockType, ParagraphBlock, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 import ParagraphBlockComponent from './ParagraphBlock';
 import HeadingBlockComponent from './HeadingBlock';
@@ -14,32 +15,36 @@ interface BlockEditorProps {
 }
 
 const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks, onChange, articleId }) => {
-  const [blocks, setBlocks] = useState<Block[]>(initialBlocks || []);
+  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize with a paragraph block if no blocks exist
+  // Initialize blocks only once
   useEffect(() => {
-    if (blocks.length === 0) {
-      if (initialContent) {
-        // If we have initial content, create a paragraph block with it
-        addBlock('paragraph', initialContent);
-      } else if (!initialBlocks) {
-        // Otherwise create an empty paragraph block
-        addBlock('paragraph');
+    if (!isInitialized) {
+      if (initialBlocks && initialBlocks.length > 0) {
+        setBlocks(initialBlocks);
+      } else if (initialContent) {
+        const newBlock = createBlock('paragraph', initialContent);
+        setBlocks([newBlock]);
+      } else {
+        const newBlock = createBlock('paragraph');
+        setBlocks([newBlock]);
       }
+      setIsInitialized(true);
     }
-  }, []);
+  }, [initialBlocks, initialContent, isInitialized]);
 
-  // Update blocks when initialBlocks change
+  // Memoize the onChange callback to prevent unnecessary re-renders
+  const handleBlocksChange = useCallback((newBlocks: Block[]) => {
+    onChange(newBlocks);
+  }, [onChange]);
+
+  // Notify parent component when blocks change, but only after initialization
   useEffect(() => {
-    if (initialBlocks && initialBlocks.length > 0) {
-      setBlocks(initialBlocks);
+    if (isInitialized && blocks.length > 0) {
+      handleBlocksChange(blocks);
     }
-  }, [initialBlocks]);
-
-  // Notify parent component when blocks change
-  useEffect(() => {
-    onChange(blocks);
-  }, [blocks, onChange]);
+  }, [blocks, isInitialized, handleBlocksChange]);
 
   const createBlock = (type: BlockType, content: string = ''): Block => {
     const id = Math.random().toString(36).substring(2, 9);
@@ -58,20 +63,20 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
     }
   };
 
-  const addBlock = (type: BlockType, content: string = '') => {
+  const addBlock = useCallback((type: BlockType, content: string = '') => {
     const newBlock = createBlock(type, content);
     setBlocks(prev => [...prev, newBlock]);
-  };
+  }, []);
 
-  const updateBlockContent = (id: string, content: string) => {
+  const updateBlockContent = useCallback((id: string, content: string) => {
     setBlocks(prev => 
       prev.map(block => 
         block.id === id ? { ...block, content } : block
       )
     );
-  };
+  }, []);
 
-  const updateHeadingLevel = (id: string, level: 1 | 2 | 3) => {
+  const updateHeadingLevel = useCallback((id: string, level: 1 | 2 | 3) => {
     setBlocks(prev => 
       prev.map(block => 
         block.id === id && block.type === 'heading' 
@@ -79,9 +84,9 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
           : block
       )
     );
-  };
+  }, []);
 
-  const updateImageBlock = (id: string, updates: Partial<ImageBlock>) => {
+  const updateImageBlock = useCallback((id: string, updates: Partial<ImageBlock>) => {
     setBlocks(prev => 
       prev.map(block => 
         block.id === id && block.type === 'image' 
@@ -89,9 +94,9 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
           : block
       )
     );
-  };
+  }, []);
 
-  const updateQuoteCitation = (id: string, citation: string) => {
+  const updateQuoteCitation = useCallback((id: string, citation: string) => {
     setBlocks(prev => 
       prev.map(block => 
         block.id === id && block.type === 'quote' 
@@ -99,42 +104,45 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
           : block
       )
     );
-  };
+  }, []);
 
-  const moveBlockUp = (id: string) => {
-    const index = blocks.findIndex(block => block.id === id);
-    if (index <= 0) return; // Can't move up if it's the first block
+  const moveBlockUp = useCallback((id: string) => {
+    setBlocks(prev => {
+      const index = prev.findIndex(block => block.id === id);
+      if (index <= 0) return prev;
 
-    const newBlocks = [...blocks];
-    const temp = newBlocks[index];
-    newBlocks[index] = newBlocks[index - 1];
-    newBlocks[index - 1] = temp;
-    
-    setBlocks(newBlocks);
-  };
+      const newBlocks = [...prev];
+      const temp = newBlocks[index];
+      newBlocks[index] = newBlocks[index - 1];
+      newBlocks[index - 1] = temp;
+      
+      return newBlocks;
+    });
+  }, []);
 
-  const moveBlockDown = (id: string) => {
-    const index = blocks.findIndex(block => block.id === id);
-    if (index === -1 || index === blocks.length - 1) return; // Can't move down if it's the last block
+  const moveBlockDown = useCallback((id: string) => {
+    setBlocks(prev => {
+      const index = prev.findIndex(block => block.id === id);
+      if (index === -1 || index === prev.length - 1) return prev;
 
-    const newBlocks = [...blocks];
-    const temp = newBlocks[index];
-    newBlocks[index] = newBlocks[index + 1];
-    newBlocks[index + 1] = temp;
-    
-    setBlocks(newBlocks);
-  };
+      const newBlocks = [...prev];
+      const temp = newBlocks[index];
+      newBlocks[index] = newBlocks[index + 1];
+      newBlocks[index + 1] = temp;
+      
+      return newBlocks;
+    });
+  }, []);
 
-  const deleteBlock = (id: string) => {
+  const deleteBlock = useCallback((id: string) => {
     setBlocks(prev => {
       const filtered = prev.filter(block => block.id !== id);
-      // If all blocks would be deleted, create a new empty paragraph block
       if (filtered.length === 0) {
         return [createBlock('paragraph')];
       }
       return filtered;
     });
-  };
+  }, []);
 
   const renderBlock = (block: Block, index: number) => {
     switch (block.type) {
@@ -197,6 +205,10 @@ const BlockEditor: React.FC<BlockEditorProps> = ({ initialContent, initialBlocks
         return null;
     }
   };
+
+  if (!isInitialized) {
+    return <div className="block-editor">Loading...</div>;
+  }
 
   return (
     <div className="block-editor">

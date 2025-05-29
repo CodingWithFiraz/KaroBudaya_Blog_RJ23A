@@ -67,14 +67,15 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleBlocksChange = (newBlocks: Block[]) => {
+  // Memoize the blocks change handler to prevent unnecessary re-renders
+  const handleBlocksChange = React.useCallback((newBlocks: Block[]) => {
     setBlocks(newBlocks);
     
     // Also update the content field with a serialized version of the blocks
     // This ensures backward compatibility
     const content = serializeBlocks(newBlocks);
     setFormData(prev => ({ ...prev, content }));
-  };
+  }, []);
   
   // Helper function to serialize blocks to plain text
   const serializeBlocks = (blocks: Block[]): string => {
@@ -215,6 +216,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article }) => {
             blocks={blocks}
             onInputChange={handleInputChange}
             onBlocksChange={handleBlocksChange}
+            articleId={article?.id}
           />
         </div>
         
