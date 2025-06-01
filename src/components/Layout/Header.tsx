@@ -64,7 +64,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="font-bold text-2xl">
-            <span className="text-karo-gold dark:text-karo-darkgold px-0 ml-10">KARO</span>
+            <span className="text-karo-gold dark:text-karo-darkgold px-0 ml-6">KARO</span>
             <span className="text-karo-black dark:text-white">BUDAYA</span>
           </Link>
           
