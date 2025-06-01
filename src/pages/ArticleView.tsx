@@ -243,7 +243,7 @@ const ArticleView: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 mb-12">
               <div className="flex items-center mb-4">
                 <Link to={`/category/${article.category.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block px-3 py-1 bg-karo-cream dark:bg-gray-700 text-karo-brown dark:text-gray-300 text-sm font-medium rounded-full hover:bg-karo-darkbeige dark:hover:bg-gray-600 transition-colors">
                   {article.category}
