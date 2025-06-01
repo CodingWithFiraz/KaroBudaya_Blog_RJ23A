@@ -74,7 +74,7 @@ const Header: React.FC = () => {
               </Link>)}
           </nav>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mr-8">
             <ThemeToggle />
             
             <button onClick={() => navigate('/editor')} className="hidden md:flex items-center gap-1 text-sm py-1 px-3 rounded-full border border-karo-darkbeige dark:border-gray-700 hover:bg-karo-cream dark:hover:bg-gray-800 transition-colors">
