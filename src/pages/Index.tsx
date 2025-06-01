@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import BackToTop from '@/components/BackToTop';
+
 const Index: React.FC = () => {
   const {
     publishedArticles,
@@ -87,8 +89,14 @@ const Index: React.FC = () => {
             </h2>
             
             <div className="relative mb-4">
-              <Input type="text" placeholder="Cari Tempat" className="pl-10 bg-white" />
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <Input 
+                type="text" 
+                placeholder="Kata Pencarian" 
+                className="pl-4 pr-12 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:border-karo-gold dark:focus:border-karo-darkgold transition-colors" 
+              />
+              <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-karo-gold dark:bg-karo-darkgold text-white p-2 rounded-full hover:bg-karo-darkgold dark:hover:bg-karo-gold transition-colors">
+                <Search size={18} />
+              </button>
             </div>
             
             <div className="space-y-4 mt-6">
@@ -260,6 +268,7 @@ const Index: React.FC = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>;
 };
 export default Index;
