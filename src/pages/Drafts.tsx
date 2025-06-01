@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
+import BackToTop from '@/components/BackToTop';
 import { Edit, Trash2, Plus, FileText } from 'lucide-react';
 
 const Drafts: React.FC = () => {
@@ -114,6 +114,7 @@ const Drafts: React.FC = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>
   );
 };

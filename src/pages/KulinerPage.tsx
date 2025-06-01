@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { useArticles } from '@/hooks/useArticles';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import FoodCard from '@/components/FoodCard';
+import BackToTop from '@/components/BackToTop';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { KulinerSubcategory } from '@/types/article';
 
@@ -88,6 +88,7 @@ const KulinerPage: React.FC = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>
   );
 };

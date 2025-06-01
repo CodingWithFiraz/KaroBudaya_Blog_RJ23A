@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -6,6 +5,7 @@ import { Category } from '@/types/article';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import BlogPost from '@/components/BlogPost';
+import BackToTop from '@/components/BackToTop';
 import { Feather } from 'lucide-react';
 
 const CategoryPage: React.FC = () => {
@@ -94,6 +94,7 @@ const CategoryPage: React.FC = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>
   );
 };
