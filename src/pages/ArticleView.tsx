@@ -12,22 +12,26 @@ import ShareButtons from '@/components/ShareButtons';
 import BackToTop from '@/components/BackToTop';
 import { Block, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 import { Article } from '@/types/article';
-
 const ArticleView: React.FC = () => {
-  const { id } = useParams<{ id: string; }>();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
   const navigate = useNavigate();
-  const { getArticleById, removeArticle } = useArticles();
+  const {
+    getArticleById,
+    removeArticle
+  } = useArticles();
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [textSize, setTextSize] = useState<'small' | 'medium' | 'large'>('medium');
-  
   useEffect(() => {
     const fetchArticle = async () => {
       if (!id) {
         navigate('/');
         return;
       }
-
       try {
         const fetchedArticle = await getArticleById(id);
         if (fetchedArticle) {
@@ -44,13 +48,10 @@ const ArticleView: React.FC = () => {
         setIsLoading(false);
       }
     };
-
     fetchArticle();
   }, [id, getArticleById, navigate]);
-  
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
+    return <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
         <Header />
         <main className="flex-grow pt-24 px-[32px]">
           <div className="container mx-auto">
@@ -60,14 +61,11 @@ const ArticleView: React.FC = () => {
           </div>
         </main>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-  
   if (!article) {
     return null;
   }
-  
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Draft';
     const date = new Date(dateString);
@@ -77,7 +75,6 @@ const ArticleView: React.FC = () => {
       year: 'numeric'
     }).format(date);
   };
-  
   const handleDelete = async () => {
     if (window.confirm('Apakah Anda yakin ingin menghapus artikel ini?')) {
       try {
@@ -88,11 +85,9 @@ const ArticleView: React.FC = () => {
       }
     }
   };
-  
   const handleGoBack = () => {
     navigate(-1);
   };
-  
   const getGoogleMapsUrl = (location?: {
     latitude: number;
     longitude: number;
@@ -100,7 +95,6 @@ const ArticleView: React.FC = () => {
     if (!location) return '';
     return `https://www.google.com/maps?q=${location.latitude},${location.longitude}`;
   };
-  
   const getTextSizeClass = () => {
     switch (textSize) {
       case 'small':
@@ -111,15 +105,12 @@ const ArticleView: React.FC = () => {
         return 'text-base';
     }
   };
-  
   const renderBlock = (block: Block, index: number) => {
     switch (block.type) {
       case 'paragraph':
-        return (
-          <p key={block.id} className="mb-4 text-karo-black dark:text-gray-100">
+        return <p key={block.id} className="mb-4 text-karo-black dark:text-gray-100">
             {block.content}
-          </p>
-        );
+          </p>;
       case 'heading':
         const headingBlock = block as HeadingBlock;
         switch (headingBlock.level) {
@@ -134,69 +125,41 @@ const ArticleView: React.FC = () => {
         }
       case 'image':
         const imageBlock = block as ImageBlock;
-        return (
-          <figure key={block.id} className="mb-6">
-            <img 
-              src={imageBlock.url} 
-              alt={imageBlock.alt || 'Article image'} 
-              className="w-full rounded-lg mb-2"
-            />
-            {imageBlock.caption && (
-              <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400">
+        return <figure key={block.id} className="mb-6">
+            <img src={imageBlock.url} alt={imageBlock.alt || 'Article image'} className="w-full rounded-lg mb-2" />
+            {imageBlock.caption && <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400">
                 {imageBlock.caption}
-              </figcaption>
-            )}
-          </figure>
-        );
+              </figcaption>}
+          </figure>;
       case 'quote':
         const quoteBlock = block as QuoteBlock;
-        return (
-          <blockquote 
-            key={block.id}
-            className="border-l-4 border-karo-gold pl-4 italic mb-4 text-gray-700 dark:text-gray-300"
-          >
+        return <blockquote key={block.id} className="border-l-4 border-karo-gold pl-4 italic mb-4 text-gray-700 dark:text-gray-300">
             <p className="mb-2">{quoteBlock.content}</p>
-            {quoteBlock.citation && (
-              <footer className="text-right text-sm font-medium">
+            {quoteBlock.citation && <footer className="text-right text-sm font-medium">
                 — {quoteBlock.citation}
-              </footer>
-            )}
-          </blockquote>
-        );
+              </footer>}
+          </blockquote>;
       default:
         return null;
     }
   };
-  
   const renderContent = () => {
     // If article has blocks, render them
     if (article.blocks && article.blocks.length > 0) {
-      return (
-        <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
+      return <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
           {article.blocks.map((block, index) => renderBlock(block, index))}
-        </div>
-      );
+        </div>;
     }
-    
+
     // Fallback to the old content format (text paragraphs)
-    return (
-      <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
-        {article.content.split('\n').map((paragraph, index) => 
-          paragraph ? (
-            <p key={index} className="mb-4 text-karo-black dark:text-gray-100">{paragraph}</p>
-          ) : (
-            <br key={index} />
-          )
-        )}
-      </div>
-    );
+    return <div className={`prose prose-lg max-w-none dark:prose-invert ${getTextSizeClass()}`}>
+        {article.content.split('\n').map((paragraph, index) => paragraph ? <p key={index} className="mb-4 text-karo-black dark:text-gray-100">{paragraph}</p> : <br key={index} />)}
+      </div>;
   };
-  
+
   // Get current URL for sharing
   const currentUrl = window.location.href;
-  
-  return (
-    <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
+  return <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
       
       <main className="flex-grow pt-24 px-[32px]">
@@ -216,7 +179,7 @@ const ArticleView: React.FC = () => {
           {/* Author Info */}
           <div className="flex items-center mt-4">
             <div className="w-12 h-12 rounded-full bg-karo-cream dark:bg-gray-700 overflow-hidden mr-3">
-              <img src="/placeholder.svg" alt={article.author} className="w-full h-full object-cover" />
+              <img alt={article.author} className="w-full h-full object-cover" src="/lovable-uploads/0473956c-4d55-493b-93f3-f828730fd2dd.png" />
             </div>
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Added By</p>
@@ -315,18 +278,11 @@ const ArticleView: React.FC = () => {
             </div>
             
             <div className="md:col-span-1">
-              {article.mapLocation ? (
-                <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
+              {article.mapLocation ? <div className="bg-white dark:bg-karo-darkcard rounded-lg shadow-md overflow-hidden">
                   <div className="h-48 bg-gray-200 relative">
-                    <iframe 
-                      src={`https://maps.google.com/maps?q=${article.mapLocation.latitude},${article.mapLocation.longitude}&z=15&output=embed`} 
-                      width="100%" 
-                      height="100%" 
-                      style={{ border: 0 }} 
-                      allowFullScreen 
-                      loading="lazy" 
-                      referrerPolicy="no-referrer-when-downgrade"
-                    ></iframe>
+                    <iframe src={`https://maps.google.com/maps?q=${article.mapLocation.latitude},${article.mapLocation.longitude}&z=15&output=embed`} width="100%" height="100%" style={{
+                  border: 0
+                }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                   </div>
                   
                   <div className="p-4">
@@ -340,21 +296,13 @@ const ArticleView: React.FC = () => {
                       </div>
                     </div>
                     
-                    <a 
-                      href={getGoogleMapsUrl(article.mapLocation)} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="w-full block text-center py-2 mt-2 bg-karo-gold dark:bg-karo-darkgold text-white rounded-md hover:bg-opacity-90 transition-colors"
-                    >
+                    <a href={getGoogleMapsUrl(article.mapLocation)} target="_blank" rel="noopener noreferrer" className="w-full block text-center py-2 mt-2 bg-karo-gold dark:bg-karo-darkgold text-white rounded-md hover:bg-opacity-90 transition-colors">
                       Dapatkan petunjuk arah
                     </a>
                   </div>
-                </div>
-              ) : (
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
+                </div> : <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 text-center">
                   <p className="text-gray-500 dark:text-gray-400">Lokasi tidak tersedia</p>
-                </div>
-              )}
+                </div>}
             </div>
           </div>
         </div>
@@ -364,8 +312,6 @@ const ArticleView: React.FC = () => {
       
       <Footer />
       <BackToTop />
-    </div>
-  );
+    </div>;
 };
-
 export default ArticleView;
