@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -10,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 const Index: React.FC = () => {
   const {
     publishedArticles,
@@ -76,13 +74,12 @@ const Index: React.FC = () => {
 
   // Public URL for Uis Karo image that's accessible from all devices
   const uisKaroImageUrl = "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80";
-  
   return <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-grow pt-20">
         {/* Destinations Sidebar + Featured Article Section */}
-        <section className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <section className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 ">
           {/* Destinations sidebar */}
           <div className="lg:col-span-3 bg-karo-cream dark:bg-gray-700 rounded-xl p-6">
             <h2 className="text-xl font-serif font-bold mb-4">
@@ -111,9 +108,9 @@ const Index: React.FC = () => {
           <div className="lg:col-span-9">
             {featuredArticle ? <div className="relative h-[500px] overflow-hidden rounded-xl group">
                 <img src={featuredArticle.featuredImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'} alt={featuredArticle.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10 "></div>
                 
-                <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-20 ">
                   <div className="mb-2">
                     <span className="text-white text-sm font-medium">
                       {featuredArticle.category}
