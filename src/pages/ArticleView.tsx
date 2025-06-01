@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useArticles } from '@/hooks/useArticles';
@@ -9,6 +8,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import TextToSpeech from '@/components/TextToSpeech';
+import ShareButtons from '@/components/ShareButtons';
+import BackToTop from '@/components/BackToTop';
 import { Block, HeadingBlock, ImageBlock, QuoteBlock } from '@/types/blocks';
 import { Article } from '@/types/article';
 
@@ -191,6 +192,9 @@ const ArticleView: React.FC = () => {
     );
   };
   
+  // Get current URL for sharing
+  const currentUrl = window.location.href;
+  
   return (
     <div className="min-h-screen flex flex-col dark:bg-karo-darkbg">
       <Header />
@@ -305,6 +309,9 @@ const ArticleView: React.FC = () => {
               </h2>
               
               {renderContent()}
+              
+              {/* Share Buttons */}
+              <ShareButtons title={article.title} url={currentUrl} />
             </div>
             
             <div className="md:col-span-1">
@@ -356,6 +363,7 @@ const ArticleView: React.FC = () => {
       </main>
       
       <Footer />
+      <BackToTop />
     </div>
   );
 };
