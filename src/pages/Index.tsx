@@ -74,8 +74,9 @@ const Index: React.FC = () => {
     return name.split(' ').map(part => part[0]).join('').toUpperCase().substring(0, 2);
   };
 
-  // Public URL for Uis Karo image that's accessible from all devices
-  const uisKaroImageUrl = "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80";
+  // Use the uploaded Karo textile image
+  const uisKaroImageUrl = "/lovable-uploads/a7017f13-c85f-4e45-a0ef-475ded433efb.png";
+  
   return <div className="min-h-screen flex flex-col">
       <Header />
       
